@@ -52,6 +52,7 @@
 - Must handle both h2 and h3 headings
 - Must account for sidebar layout (320px fixed width)
 - Must be mobile-responsive
+- On narrow screens (<= 1024px), the TOC auto-hides and uses an external backdrop overlay
 
 ---
 

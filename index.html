@@ -270,7 +270,7 @@
             content: 'bash';
             display: block;
             background: var(--bg-code-header);
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 3.5rem 0.5rem 1rem;
             font-family: var(--font-body);
             font-size: 0.75rem;
             color: var(--text-muted);
@@ -286,6 +286,34 @@
             color: var(--text-primary);
             overflow-x: auto;
             border: none;
+        }
+
+        .code-copy-btn {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            letter-spacing: 0.02em;
+            padding: 6px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-copy-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-coral);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .code-copy-btn.copied {
+            color: #fff;
+            background: var(--accent-teal);
+            border-color: var(--accent-teal);
         }
 
         .comment { color: var(--text-muted); font-style: italic; }
@@ -4193,10 +4221,71 @@ body.toc-hidden .main-content {
         }, 150);
     }
 
+    function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text).then(() => true).catch(() => false);
+        }
+
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let copied = false;
+        try {
+            copied = document.execCommand('copy');
+        } catch (err) {
+            copied = false;
+        }
+        document.body.removeChild(textarea);
+        return Promise.resolve(copied);
+    }
+
+    function attachCopyButtons() {
+        document.querySelectorAll('pre').forEach((pre) => {
+            if (pre.querySelector('.code-copy-btn')) return;
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'code-copy-btn';
+            button.textContent = 'Copy';
+            button.setAttribute('aria-label', 'Copy code');
+
+            const codeElement = pre.querySelector('code');
+            let resetTimer;
+
+            button.addEventListener('click', async () => {
+                const rawText = codeElement ? codeElement.textContent : pre.textContent;
+                const text = (rawText || '').replace(/\n$/, '');
+                if (!text) return;
+
+                const copied = await copyText(text);
+                if (!copied) return;
+
+                button.classList.add('copied');
+                button.textContent = 'Copied';
+
+                if (resetTimer) {
+                    window.clearTimeout(resetTimer);
+                }
+                resetTimer = window.setTimeout(() => {
+                    button.classList.remove('copied');
+                    button.textContent = 'Copy';
+                }, 1500);
+            });
+
+            pre.appendChild(button);
+        });
+    }
+
     // Initialize
     function init() {
         const tocData = generateTOC();
         renderTOC(tocData);
+        attachCopyButtons();
 
         // Event listeners
         tocToggle.addEventListener('click', toggleTOC);

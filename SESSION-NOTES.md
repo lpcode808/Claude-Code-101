@@ -9,6 +9,7 @@ Changes
 - Updated `claude-code-guide.html` to load local fonts.
 - Created `index.html` (copy of `claude-code-guide.html`) for GitHub Pages.
 - Added `README.md` and `.gitignore`.
+- Fixed the TOC sidebar on narrow windows by auto-hiding it and moving the backdrop outside the panel.
 - Renamed project directory from `Learning` to `Claude-Code-101`.
 - Updated path references in `DEVELOPMENT-SUMMARY.md`.
 - Initialized git repo, added remote `https://github.com/<github-username>/Claude-Code-101`.

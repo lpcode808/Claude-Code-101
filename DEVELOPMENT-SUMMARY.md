@@ -250,6 +250,20 @@ Claude: *adds date picker*
 
 ---
 
+### 13. TOC Responsive Auto-Hide + Backdrop Fix
+
+**Issue:** On narrow windows, the left TOC sidebar appeared blank/washed out.
+
+**Fixes Applied (HTML/JS):**
+- **Backdrop layering:** Moved `.toc-backdrop` outside `#toc-panel` so the overlay does not cover the panel.
+- **Responsive behavior:** Auto-close TOC on resize at `<= 1024px` to fully hide the sidebar when space is tight.
+
+**Files Updated:**
+- `index.html`
+- `claude-code-guide.html`
+
+---
+
 ## 📊 Files Modified
 
 ### `~/Coding/Claude-Code-101/start.md`
