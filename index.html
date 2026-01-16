@@ -2685,6 +2685,38 @@ base: <span class="string">'/projectname/'</span>
             <path d="m21 21-4.35-4.35"></path>
         </svg>
     </button>
+    <button id="slideshow-toggle" class="fab fab-slideshow" aria-label="Toggle slideshow mode" title="Slideshow Mode (S)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+    </button>
+</div>
+
+<!-- Slideshow Navigation -->
+<div id="slideshow-nav" class="slideshow-hidden">
+    <button id="slide-prev" class="slide-nav-btn" aria-label="Previous slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+    <div id="slide-dots" class="slide-dots"></div>
+    <button id="slide-next" class="slide-nav-btn" aria-label="Next slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </button>
+    <div id="slide-counter" class="slide-counter"></div>
+</div>
+
+<!-- First-visit hint for FABs -->
+<div id="fab-hint" class="fab-hint fab-hint-hidden">
+    <div class="fab-hint-content">
+        <span class="fab-hint-text">Try <strong>Slideshow</strong> mode</span>
+        <span class="fab-hint-key">S</span>
+    </div>
+    <div class="fab-hint-arrow"></div>
 </div>
 
 <!-- TOC Backdrop -->
@@ -2871,6 +2903,317 @@ base: <span class="string">'/projectname/'</span>
     background: var(--bg-secondary);
     width: 48px;
     height: 48px;
+}
+
+.fab-slideshow {
+    background: var(--bg-secondary);
+    width: 48px;
+    height: 48px;
+}
+
+.fab-slideshow.active {
+    background: var(--accent-teal);
+}
+
+/* First-visit FAB hint */
+.fab-hint {
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    z-index: 998;
+    animation: fab-hint-appear 0.4s ease 1.5s both;
+}
+
+.fab-hint-hidden {
+    display: none;
+}
+
+.fab-hint-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.fab-hint-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.fab-hint-text strong {
+    color: var(--accent-teal);
+}
+
+.fab-hint-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    box-shadow: 0 2px 0 var(--border);
+}
+
+.fab-hint-arrow {
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 8px solid var(--border);
+}
+
+.fab-hint-arrow::after {
+    content: '';
+    position: absolute;
+    right: 1px;
+    top: -7px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid var(--bg-secondary);
+}
+
+@keyframes fab-hint-appear {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Pulse animation on slideshow button when hint is visible */
+.fab-slideshow.hint-pulse {
+    animation: fab-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fab-pulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(92, 184, 178, 0.3);
+    }
+}
+
+/* Slideshow Mode */
+.slideshow-hidden {
+    display: none !important;
+}
+
+#slideshow-nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(43, 43, 43, 0.95);
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    backdrop-filter: blur(12px);
+}
+
+.slide-nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.slide-nav-btn:hover {
+    background: var(--bg-code);
+    color: var(--text-primary);
+}
+
+.slide-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.slide-dots {
+    display: flex;
+    gap: 6px;
+    max-width: 300px;
+    overflow-x: auto;
+    padding: 4px 0;
+}
+
+.slide-dots::-webkit-scrollbar {
+    display: none;
+}
+
+.slide-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.slide-dot:hover {
+    background: var(--text-muted);
+}
+
+.slide-dot.active {
+    background: var(--accent-coral);
+    transform: scale(1.25);
+}
+
+.slide-counter {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+/* Slideshow mode body state */
+body.slideshow-mode {
+    overflow: hidden;
+}
+
+body.slideshow-mode .main-content {
+    position: fixed;
+    inset: 0;
+    margin: 0 !important;
+    padding: 0;
+    max-width: none;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: var(--bg-primary);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.slideshow-mode #toc-panel,
+body.slideshow-mode #reading-progress,
+body.slideshow-mode #floating-actions {
+    display: none !important;
+}
+
+/* Hide content before first section (title, subtitle) in slideshow mode */
+body.slideshow-mode .main-content > h1,
+body.slideshow-mode .main-content > h1 + p {
+    display: none;
+}
+
+/* Slide sections - normal block flow in scroll mode */
+.slide-section {
+    display: block;
+}
+
+/* Slideshow mode: stack all slides, show only active */
+body.slideshow-mode .slide-section {
+    position: absolute;
+    inset: 0;
+    padding: 60px 80px 100px;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--bg-primary);
+    transform: translateX(40px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
+}
+
+body.slideshow-mode .slide-section.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    z-index: 1;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0s;
+}
+
+body.slideshow-mode .slide-section.prev {
+    transform: translateX(-40px);
+}
+
+/* Slide content styling */
+body.slideshow-mode .slide-section > * {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+body.slideshow-mode .slide-section h2 {
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+/* Page indicators for long content */
+.slide-page-indicator {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.page-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-dot.active {
+    background: var(--accent-teal);
+}
+
+/* Mobile adjustments for slideshow */
+@media (max-width: 768px) {
+    body.slideshow-mode .slide-section {
+        padding: 40px 24px 120px;
+    }
+
+    #slideshow-nav {
+        padding: 10px 16px;
+        gap: 12px;
+    }
+
+    .slide-dots {
+        max-width: 150px;
+    }
 }
 
 /* TOC Sidebar - Always visible on left */
@@ -4277,11 +4620,334 @@ body.toc-hidden .main-content {
         });
     }
 
+    // ========================================
+    // SLIDESHOW MODE
+    // ========================================
+
+    const slideshowToggle = document.getElementById('slideshow-toggle');
+    const slideshowNav = document.getElementById('slideshow-nav');
+    const slidePrev = document.getElementById('slide-prev');
+    const slideNext = document.getElementById('slide-next');
+    const slideDots = document.getElementById('slide-dots');
+    const slideCounter = document.getElementById('slide-counter');
+
+    let slideSections = [];
+    let currentSlideIndex = 0;
+    let isSlideshowMode = false;
+    let scrollPositionBeforeSlideshow = 0;
+
+    // Wrap content between H2s into section elements
+    function wrapSections() {
+        if (slideSections.length > 0) return; // Already wrapped
+
+        const h2s = mainContent.querySelectorAll('h2');
+        if (h2s.length === 0) return;
+
+        h2s.forEach((h2, index) => {
+            const section = document.createElement('div');
+            section.className = 'slide-section';
+            section.dataset.slideIndex = index;
+
+            // Collect all elements from this H2 until the next H2 (or end)
+            const elementsToWrap = [h2];
+            let sibling = h2.nextElementSibling;
+
+            while (sibling && sibling.tagName !== 'H2') {
+                elementsToWrap.push(sibling);
+                sibling = sibling.nextElementSibling;
+            }
+
+            // Insert section before the h2
+            h2.parentNode.insertBefore(section, h2);
+
+            // Move elements into section
+            elementsToWrap.forEach(el => section.appendChild(el));
+
+            slideSections.push(section);
+        });
+
+        renderSlideDots();
+    }
+
+    // Render dot indicators
+    function renderSlideDots() {
+        slideDots.innerHTML = '';
+        slideSections.forEach((_, index) => {
+            const dot = document.createElement('button');
+            dot.className = 'slide-dot' + (index === currentSlideIndex ? ' active' : '');
+            dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+            dot.addEventListener('click', () => goToSlide(index));
+            slideDots.appendChild(dot);
+        });
+        updateSlideCounter();
+    }
+
+    // Update slide counter text
+    function updateSlideCounter() {
+        slideCounter.textContent = `${currentSlideIndex + 1} / ${slideSections.length}`;
+    }
+
+    // Go to specific slide
+    function goToSlide(index) {
+        if (index < 0 || index >= slideSections.length) return;
+
+        const prevIndex = currentSlideIndex;
+        currentSlideIndex = index;
+
+        // Update section classes
+        slideSections.forEach((section, i) => {
+            section.classList.remove('active', 'prev');
+            if (i === currentSlideIndex) {
+                section.classList.add('active');
+            } else if (i < currentSlideIndex) {
+                section.classList.add('prev');
+            }
+        });
+
+        // Update dots
+        const dots = slideDots.querySelectorAll('.slide-dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentSlideIndex);
+        });
+
+        // Scroll active dot into view
+        const activeDot = dots[currentSlideIndex];
+        if (activeDot) {
+            activeDot.scrollIntoView({ block: 'nearest', inline: 'center' });
+        }
+
+        updateSlideCounter();
+        updateNavButtons();
+
+        // Reset scroll position in the slide
+        const activeSection = slideSections[currentSlideIndex];
+        if (activeSection) {
+            activeSection.scrollTop = 0;
+        }
+    }
+
+    // Update prev/next button states
+    function updateNavButtons() {
+        slidePrev.disabled = currentSlideIndex === 0;
+        slideNext.disabled = currentSlideIndex === slideSections.length - 1;
+    }
+
+    // Navigate to previous slide
+    function prevSlide() {
+        if (currentSlideIndex > 0) {
+            goToSlide(currentSlideIndex - 1);
+        }
+    }
+
+    // Navigate to next slide
+    function nextSlide() {
+        if (currentSlideIndex < slideSections.length - 1) {
+            goToSlide(currentSlideIndex + 1);
+        }
+    }
+
+    // Find which slide corresponds to current scroll position
+    function findSlideFromScrollPosition() {
+        const scrollTop = window.scrollY;
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        slideSections.forEach((section, index) => {
+            const h2 = section.querySelector('h2');
+            if (h2) {
+                const rect = h2.getBoundingClientRect();
+                const distance = Math.abs(rect.top);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            }
+        });
+
+        return closestIndex;
+    }
+
+    // Toggle slideshow mode
+    function toggleSlideshowMode() {
+        isSlideshowMode = !isSlideshowMode;
+
+        if (isSlideshowMode) {
+            // Entering slideshow mode
+            scrollPositionBeforeSlideshow = window.scrollY;
+            wrapSections();
+
+            // Find current section based on scroll position
+            const slideIndex = findSlideFromScrollPosition();
+
+            document.body.classList.add('slideshow-mode');
+            slideshowNav.classList.remove('slideshow-hidden');
+            slideshowToggle.classList.add('active');
+
+            goToSlide(slideIndex);
+        } else {
+            // Exiting slideshow mode
+            document.body.classList.remove('slideshow-mode');
+            slideshowNav.classList.add('slideshow-hidden');
+            slideshowToggle.classList.remove('active');
+
+            // Remove active/prev classes from sections
+            slideSections.forEach(section => {
+                section.classList.remove('active', 'prev');
+            });
+
+            // Scroll to the section we were viewing
+            const targetSection = slideSections[currentSlideIndex];
+            if (targetSection) {
+                const h2 = targetSection.querySelector('h2');
+                if (h2) {
+                    setTimeout(() => {
+                        h2.scrollIntoView({ block: 'start' });
+                    }, 50);
+                }
+            }
+        }
+    }
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    function handleTouchStart(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }
+
+    function handleTouchEnd(e) {
+        if (!isSlideshowMode) return;
+
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        // Only trigger if horizontal swipe is dominant and significant
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            if (deltaX > 0) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        }
+    }
+
+    // Initialize slideshow event listeners
+    function initSlideshow() {
+        if (!slideshowToggle) return;
+
+        slideshowToggle.addEventListener('click', () => {
+            dismissFabHint();
+            toggleSlideshowMode();
+        });
+        slidePrev.addEventListener('click', prevSlide);
+        slideNext.addEventListener('click', nextSlide);
+
+        // Touch events
+        document.addEventListener('touchstart', handleTouchStart, { passive: true });
+        document.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
+
+    // First-visit hint for FABs
+    const fabHint = document.getElementById('fab-hint');
+
+    function showFabHint() {
+        // Only show on first visit
+        if (localStorage.getItem('fabHintDismissed')) {
+            console.log('FAB hint: Already dismissed');
+            return;
+        }
+
+        console.log('FAB hint: Scheduling to appear in 1.5s...');
+
+        // Show hint after a short delay
+        setTimeout(() => {
+            console.log('FAB hint: Attempting to show, element:', fabHint);
+            if (fabHint) {
+                fabHint.classList.remove('fab-hint-hidden');
+                slideshowToggle?.classList.add('hint-pulse');
+                console.log('FAB hint: Should now be visible, classes:', fabHint.className);
+
+                // Auto-dismiss after 8 seconds
+                setTimeout(dismissFabHint, 8000);
+            } else {
+                console.error('FAB hint: Element not found!');
+            }
+        }, 1500);
+    }
+
+    function dismissFabHint() {
+        if (fabHint && !fabHint.classList.contains('fab-hint-hidden')) {
+            fabHint.style.opacity = '0';
+            fabHint.style.transform = 'translateX(20px)';
+            fabHint.style.transition = 'opacity 0.3s, transform 0.3s';
+            slideshowToggle?.classList.remove('hint-pulse');
+
+            setTimeout(() => {
+                fabHint.classList.add('fab-hint-hidden');
+            }, 300);
+
+            localStorage.setItem('fabHintDismissed', 'true');
+        }
+    }
+
+    // Dismiss hint on any FAB click or slideshow toggle
+    function initFabHint() {
+        showFabHint();
+
+        // Dismiss on clicking the hint itself
+        fabHint?.addEventListener('click', dismissFabHint);
+    }
+
+    // Slideshow keyboard navigation (added to main keydown handler in init)
+    function handleSlideshowKeydown(e) {
+        if (!isSlideshowMode) return false;
+
+        // Don't capture if in an input
+        if (document.activeElement.tagName === 'INPUT') return false;
+
+        switch (e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                prevSlide();
+                return true;
+            case 'ArrowRight':
+                e.preventDefault();
+                nextSlide();
+                return true;
+            case 'Home':
+                e.preventDefault();
+                goToSlide(0);
+                return true;
+            case 'End':
+                e.preventDefault();
+                goToSlide(slideSections.length - 1);
+                return true;
+            case 'Escape':
+                e.preventDefault();
+                toggleSlideshowMode();
+                return true;
+        }
+        return false;
+    }
+
+    // ========================================
+    // END SLIDESHOW MODE
+    // ========================================
+
     // Initialize
     function init() {
         const tocData = generateTOC();
         renderTOC(tocData);
         attachCopyButtons();
+        initSlideshow();
+        initFabHint();
 
         // Event listeners
         tocToggle.addEventListener('click', toggleTOC);
@@ -4309,6 +4975,11 @@ body.toc-hidden .main-content {
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
+            // Handle slideshow keyboard navigation first
+            if (handleSlideshowKeydown(e)) {
+                return;
+            }
+
             // Cmd+K to open search
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                 e.preventDefault();
@@ -4323,9 +4994,19 @@ body.toc-hidden .main-content {
                 return;
             }
 
-            // T key to toggle TOC
-            if (e.key === 't' || e.key === 'T') {
+            // S key to toggle slideshow mode
+            if (e.key === 's' || e.key === 'S') {
                 if (document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    dismissFabHint();
+                    toggleSlideshowMode();
+                    return;
+                }
+            }
+
+            // T key to toggle TOC (only when not in slideshow mode)
+            if (e.key === 't' || e.key === 'T') {
+                if (document.activeElement.tagName !== 'INPUT' && !isSlideshowMode) {
                     e.preventDefault();
                     toggleTOC();
                 }
