@@ -535,8 +535,8 @@
 <p><strong>API</strong></p>
 <ul>
     <li>How programs talk to each other (like a waiter between you and the kitchen)</li>
-    <li>Claude Code uses Anthropic's API to access Claude's AI brain</li>
-    <li>You don't need to manage this - it's included in your Claude Pro subscription</li>
+    <li>Claude Code uses Anthropic's APIs behind the scenes</li>
+    <li>You sign in with your Claude account; access and limits depend on your plan or org settings</li>
 </ul>
 
 <p><strong>Pro tip:</strong> Don't try to memorize these! Just skim them now, come back when you see them in the guide and think "wait, what was that again?"</p>
@@ -547,7 +547,7 @@
 
 <p><strong>What happened:</strong> Claude Code (Anthropic's AI coding tool) has "broken containment" into mainstream consciousness. Non-technical people are suddenly realizing they can build actual apps—and you might be one of them.</p>
 
-<p><strong>The big insight:</strong> Your Claude Pro subscription ($20/month) already includes access to an AI that can code on your local Mac - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but now you can also run <code>claude</code> in your terminal and build things.</p>
+<p><strong>The big insight:</strong> With a Claude account, you can run <code>claude</code> in your terminal and build things locally - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but Claude Code availability and limits depend on your plan.</p>
 
 <p><strong>Why this matters:</strong> The interface is just... conversation. You describe what you want, Claude builds it.</p>
 
@@ -638,8 +638,7 @@ AI:  <span class="comment">*searches your email*</span>
 <ul>
     <li>File system (create, read, edit, delete files)</li>
     <li>Terminal (run commands, install packages)</li>
-    <li>Web search (look up documentation)</li>
-    <li>Screenshot capability (see what's on your screen)</li>
+    <li>Web access for up-to-date info (when enabled)</li>
 </ul>
 
 <h3>Why This Matters Beyond Coding</h3>
@@ -937,6 +936,11 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <pre><code><span class="comment"># Copy-paste this whole line:</span>
 <span class="command">curl</span> -fsSL https://claude.ai/install.sh | <span class="command">bash</span></code></pre>
 
+<p><strong>Want to inspect the installer first?</strong> Download it, skim it, then run:</p>
+<pre><code><span class="command">curl</span> -fsSL https://claude.ai/install.sh -o install.sh
+<span class="command">open</span> install.sh
+<span class="command">bash</span> install.sh</code></pre>
+
 <p><strong>You'll see:</strong> Text scrolling as it downloads and installs (takes 30-60 seconds)</p>
 
 <p><strong>Troubleshooting:</strong></p>
@@ -988,7 +992,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
             <li>Still not working? Run <code>which claude</code> - if it shows nothing, reinstall (Step 2)</li>
         </ul>
     </li>
-    <li><strong>"Authentication required"</strong> → You need to log in. The terminal will show a link - click it or copy-paste into your browser, then log in with your Claude Pro account</li>
+    <li><strong>"Authentication required"</strong> → You need to log in. The terminal will show a link - click it or copy-paste into your browser, then log in with your Claude account</li>
     <li><strong>Terminal just returns to the prompt</strong> → Something went wrong. Try <code>claude --version</code> to see if it's installed. If you see a version number, try <code>claude</code> again</li>
 </ul>
 
@@ -1036,11 +1040,11 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <h2 id="three-paths">Three Paths, Choose Your Adventure</h2>
 
-<h3>Option 1: Claude Desktop (Now With Claude Code!)</h3>
+<h3>Option 1: Claude Desktop (Visual App)</h3>
 <ul>
     <li>Visual app on your Mac/Windows/Linux</li>
     <li>Familiar chat interface with coding superpowers</li>
-    <li><strong>Current status:</strong> Claude Code is now integrated into the Desktop app</li>
+    <li><strong>Current status:</strong> Check the Desktop app release notes for Claude Code availability</li>
     <li><strong>Best for:</strong> People who want a visual interface without learning Terminal</li>
     <li><strong>Bonus:</strong> Can run multiple coding sessions in parallel</li>
 </ul>
@@ -1049,7 +1053,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <ul>
     <li>Terminal-based (that "hacker screen" thing—don't worry, it's friendlier than it looks)</li>
     <li>Type <code>claude</code> and get a conversational coding agent</li>
-    <li><strong>Current status:</strong> Live, included with Claude Pro</li>
+    <li><strong>Current status:</strong> Live; access depends on your plan</li>
     <li><strong>Best for:</strong> Anyone willing to learn basic terminal use</li>
     <li><strong>Key advantage:</strong> Your code lives on YOUR computer, not in the cloud</li>
 </ul>
@@ -1058,7 +1062,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <ul>
     <li>Web interface you know</li>
     <li>Good for chat, artifacts, general use</li>
-    <li><strong>Privacy tip:</strong> Check Settings → Privacy → Enable "Don't train on my data" (not on by default)</li>
+    <li><strong>Privacy tip:</strong> Review data privacy controls at <a href="https://claude.ai/settings/data-privacy-controls" target="_blank">claude.ai/settings/data-privacy-controls</a></li>
     <li><strong>Trade-off:</strong> Artifacts are in the cloud (but you can export)</li>
 </ul>
 
@@ -1396,7 +1400,7 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
 <ul>
     <li>What's in other folders (unless you <code>cd</code> there)</li>
     <li>What happened in previous sessions (unless you remind it)</li>
-    <li>What your browser shows (unless you describe it or take a screenshot)</li>
+    <li>What your browser shows (unless you describe it)</li>
 </ul>
 
 <p><strong>Pro tip:</strong> If Claude seems confused, give more context:</p>
@@ -1499,30 +1503,23 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
 
 <h2 id="security-privacy">Security & Privacy Deep Dive</h2>
 
-<h3>Your Claude Pro Setup</h3>
+<h3>Your Claude Account Setup</h3>
 
-<p><strong>⚠️ FIRST: Check Your Privacy Settings</strong></p>
+<p><strong>⚠️ FIRST: Review your data privacy controls</strong></p>
 <ul>
-    <li>Go to <a href="https://claude.ai" target="_blank">claude.ai</a> → Settings → Privacy</li>
-    <li>Find "<strong>Don't train on my data</strong>" setting</li>
-    <li><strong>This is NOT enabled by default</strong> - you must manually turn it on</li>
-    <li>Once enabled, applies to both claude.ai AND Claude CLI</li>
+    <li>Go to <a href="https://claude.ai/settings/data-privacy-controls" target="_blank">claude.ai/settings/data-privacy-controls</a></li>
+    <li>Choose whether your data can be used to improve Claude models (this applies to Claude Code when you sign in)</li>
 </ul>
 
-<p><strong>What "Don't train on my data" means when enabled:</strong></p>
+<p><strong>Consumer accounts (Free, Pro, and Max) per Claude Code data usage docs:</strong></p>
 <ul>
-    <li>30-day data retention for feedback transcripts (debugging, if things break)</li>
-    <li>After 30 days, your conversations get deleted</li>
-    <li>Anthropic can't use your code to train new models</li>
+    <li>If you allow data use for model improvement, retention can be up to 5 years</li>
+    <li>If you do not allow it, retention is 30 days</li>
 </ul>
 
-<p><strong>What you're paying for with Claude Pro:</strong></p>
-<ul>
-    <li>Claude Pro subscription ($20/month)</li>
-    <li>Higher usage limits and priority access</li>
-    <li>Access to the most capable Claude models</li>
-    <li><em>The ability to enable "Don't train on my data" (but you must turn it on yourself)</em></li>
-</ul>
+<p><strong>Commercial accounts (Team, Enterprise, API)</strong> have different policies and typically are not used for training unless you opt in. See <a href="https://code.claude.com/docs/en/data-usage" target="_blank">Claude Code data usage</a> for details.</p>
+
+<p><strong>Plan details vary:</strong> Usage limits and features depend on your plan; check your account settings for current limits.</p>
 
 <h3>Understanding the Data Flow</h3>
 
@@ -1549,13 +1546,15 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
          │                        │
          │ Creates/modifies files │
          │ ALL LOCAL              │
-         └────────────────────────┘</div></div>
+        └────────────────────────┘</div></div>
+
+<p><strong>Important detail from the data usage docs:</strong> Claude Code runs locally, but prompts and model outputs are sent over the network to Anthropic services. Data is encrypted in transit via TLS and is not encrypted at rest.</p>
 
 <p><strong>The trade-off:</strong></p>
 <ul>
     <li><strong>Cloud dependency:</strong> Needs internet, sends your code to Anthropic's API</li>
-    <li><strong>Privacy level:</strong> Better than services that train on your data, but not as private as 100% local AI</li>
-    <li><strong>Alternative:</strong> Cursor offers "Privacy Mode" where code never leaves your computer (but different product, different price)</li>
+    <li><strong>Privacy level:</strong> Governed by your plan and data privacy controls (see data usage docs)</li>
+    <li><strong>Alternative:</strong> Some tools (e.g., Cursor) offer privacy modes; verify their current policies</li>
 </ul>
 
 <h3>Sandboxing & Safeguards</h3>
@@ -1616,11 +1615,11 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
     <tbody>
         <tr>
             <td><strong>Cost</strong></td>
-            <td>Included w/ Pro</td>
-            <td>Included w/ Pro</td>
-            <td>Included w/ Pro</td>
-            <td>$20/mo</td>
-            <td>$15-20/mo</td>
+            <td>Varies by plan</td>
+            <td>Varies by plan</td>
+            <td>Free + paid tiers</td>
+            <td>Paid plans</td>
+            <td>Paid plans</td>
         </tr>
         <tr>
             <td><strong>Where files live</strong></td>
@@ -1688,7 +1687,7 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
 │     ↳ Professional setup
 
 └─ Professional development work
-   └─ Consider: Cursor (privacy mode)
+   └─ Consider: Cursor (privacy mode; check policy)
       ↳ More control over AI behavior
       ↳ Enterprise features
       ↳ Different pricing model</div></div>
@@ -1702,8 +1701,8 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
 <p><strong>Already have:</strong></p>
 <ul>
     <li>✅ MacOS computer</li>
-    <li>✅ Claude Pro subscription</li>
-    <li>⚠️ <strong>CHECK THIS:</strong> Go to <a href="https://claude.ai" target="_blank">claude.ai</a> → Settings → Privacy → Enable "Don't train on my data"</li>
+    <li>✅ Claude account (Claude Code access depends on your plan)</li>
+    <li>⚠️ <strong>CHECK THIS:</strong> Review <a href="https://claude.ai/settings/data-privacy-controls" target="_blank">claude.ai/settings/data-privacy-controls</a> and choose your data privacy setting</li>
 </ul>
 
 <p><strong>Need to install:</strong></p>
@@ -1876,8 +1875,7 @@ Changes applied! Refresh your browser to see the updates.</code></pre>
 <ul>
     <li>Can read/write files in current folder</li>
     <li>Can run terminal commands (like git, npm)</li>
-    <li>Can take screenshots (for debugging visual stuff)</li>
-    <li>Can search the web</li>
+    <li>Can access up-to-date info from the web (when enabled)</li>
     <li>Multi-turn conversations about your codebase</li>
 </ul>
 
@@ -2124,8 +2122,8 @@ Can you recreate it locally?"</span>
 <p><strong>API (Application Programming Interface):</strong></p>
 <ul>
     <li>How programs talk to each other (like a waiter taking your order to the kitchen)</li>
-    <li>Claude Code uses Anthropic's API to access Claude's "brain"</li>
-    <li>You don't manage the API key - included in your Pro subscription</li>
+    <li>Claude Code uses Anthropic's APIs behind the scenes</li>
+    <li>You sign in with your Claude account; access and limits depend on your plan or org settings</li>
     <li><strong>Don't overthink it:</strong> You use APIs every day without knowing (weather apps, maps, etc.)</li>
 </ul>
 
@@ -2287,34 +2285,30 @@ Can you recreate it locally?"</span>
 
 <p><strong>Remember:</strong></p>
 <ul>
-    <li>⚠️ <strong>Check your settings:</strong> <a href="https://claude.ai" target="_blank">claude.ai</a> → Settings → Privacy → "Don't train on my data" (NOT on by default)</li>
-    <li>Once enabled: 30-day retention for debugging, then deleted</li>
-    <li>All API calls still processed by Anthropic's servers (encrypted in transit)</li>
+    <li>⚠️ <strong>Check your settings:</strong> <a href="https://claude.ai/settings/data-privacy-controls" target="_blank">claude.ai/settings/data-privacy-controls</a></li>
+    <li>Consumer accounts: allow data use → retention up to 5 years; disallow → 30 days</li>
+    <li>All requests are processed by Anthropic's servers (encrypted in transit)</li>
 </ul>
 
 <p><strong>For sensitive projects:</strong></p>
 <ul>
     <li>Consider: Running on separate machine</li>
-    <li>Or: Use Cursor with Privacy Mode (different product)</li>
+    <li>Or: Use tools with privacy modes (verify their policies)</li>
     <li>Or: Local-only AI models (more technical, less capable)</li>
 </ul>
 
 <h3>Cost Management</h3>
 
-<p><strong>Claude Pro ($20/mo) includes:</strong></p>
+<p><strong>Plans and limits change:</strong></p>
 <ul>
-    <li>~45 messages every 5 hours (for typical conversations)</li>
-    <li>Weekly usage caps (added in 2025 to ensure fair access)</li>
-    <li>200,000-token context window (that's a LOT of code)</li>
-    <li>Priority access during busy times</li>
-    <li>Resets regularly, so use it!</li>
+    <li>Usage limits and context windows vary by plan</li>
+    <li>Check your account settings for current limits and upgrade options</li>
 </ul>
 
 <p><strong>Watch out for:</strong></p>
 <ul>
-    <li>Long-running tasks can use multiple messages from your quota</li>
-    <li>Complex projects might hit limits faster</li>
-    <li>Solution: Upgrade to Max ($100/mo for 5x usage, $200/mo for 20x) if needed</li>
+    <li>Long-running tasks can use more of your quota</li>
+    <li>If you hit limits, split tasks or upgrade your plan</li>
 </ul>
 
 <h3>The "Magic Black Box" Problem</h3>
