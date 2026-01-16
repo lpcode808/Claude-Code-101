@@ -1,0 +1,4314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code for Everyone: A Briefing Doc</title>
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <style>
+        :root {
+            --bg-primary: #2b2b2b;
+            --bg-secondary: #343434;
+            --bg-code: #1e1e1e;
+            --bg-code-header: #2a2a2a;
+            --text-primary: #ececec;
+            --text-secondary: #b4b4b4;
+            --text-muted: #8b8b8b;
+            --accent-coral: #e07a5f;
+            --accent-teal: #5cb8b2;
+            --accent-green: #81b88b;
+            --accent-purple: #b39ddb;
+            --border: #404040;
+            --link: #8ab4f8;
+            --font-body: 'Source Serif 4', 'Georgia', serif;
+            --font-display: 'Sora', 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+            --content-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background:
+                radial-gradient(1200px 600px at 8% -10%, rgba(224, 122, 95, 0.16), transparent 60%),
+                radial-gradient(900px 520px at 100% 5%, rgba(92, 184, 178, 0.14), transparent 55%),
+                radial-gradient(800px 720px at 70% 110%, rgba(179, 157, 219, 0.12), transparent 60%),
+                linear-gradient(160deg, #232323 0%, #2b2b2b 45%, #303030 100%);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 16px;
+            font-weight: 400;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            isolation: isolate;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: -20% 0 0 0;
+            background:
+                radial-gradient(400px 240px at 20% 20%, rgba(224, 122, 95, 0.18), transparent 65%),
+                radial-gradient(340px 260px at 75% 15%, rgba(92, 184, 178, 0.16), transparent 70%);
+            filter: blur(0px);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(120deg, rgba(236, 236, 236, 0.04) 1px, transparent 1px),
+                linear-gradient(30deg, rgba(236, 236, 236, 0.035) 1px, transparent 1px);
+            background-size: 32px 32px, 48px 48px;
+            opacity: 0.35;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        input, button, select, textarea {
+            font: inherit;
+        }
+
+        /* Layout container */
+        .layout-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            padding: 56px 64px;
+            max-width: 920px;
+            margin: 36px auto;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(52, 52, 52, 0.96), rgba(43, 43, 43, 0.94));
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--content-shadow);
+            position: relative;
+        }
+
+        .main-content > * {
+            animation: rise-in 0.7s ease both;
+            animation-delay: var(--reveal-delay, 0ms);
+        }
+
+        .main-content > *:nth-child(6n + 1) { --reveal-delay: 0ms; }
+        .main-content > *:nth-child(6n + 2) { --reveal-delay: 70ms; }
+        .main-content > *:nth-child(6n + 3) { --reveal-delay: 140ms; }
+        .main-content > *:nth-child(6n + 4) { --reveal-delay: 210ms; }
+        .main-content > *:nth-child(6n + 5) { --reveal-delay: 280ms; }
+        .main-content > *:nth-child(6n + 6) { --reveal-delay: 350ms; }
+
+        /* Sidebar visible by default on desktop */
+        body:not(.toc-hidden) .main-content {
+            margin-left: var(--toc-width, 320px);
+        }
+
+        /* Smooth transition for margin when toggling */
+        .main-content {
+            transition: margin-left 0.2s;
+        }
+
+        body.toc-hidden .main-content {
+            transition: margin-left 0.2s;
+        }
+
+        @keyframes rise-in {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .main-content > * {
+                animation: none;
+            }
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        h1 + p {
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 1.55rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1.25rem;
+            color: #fff;
+            letter-spacing: -0.01em;
+            position: relative;
+            padding-left: 0.9rem;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.45em;
+            width: 0.35rem;
+            height: 0.9rem;
+            border-radius: 999px;
+            background: linear-gradient(180deg, var(--accent-coral), var(--accent-teal));
+            opacity: 0.9;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--link);
+            text-decoration: none;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
+            transition: color 0.2s ease, text-decoration-color 0.2s ease;
+        }
+
+        a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        li ul, li ol {
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--text-secondary);
+        }
+
+        ::selection {
+            background: rgba(224, 122, 95, 0.3);
+            color: #fff;
+        }
+
+        /* Inline code */
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            background: var(--bg-code);
+            padding: 0.2em 0.5em;
+            border-radius: 6px;
+            color: var(--accent-coral);
+            font-weight: 400;
+            border: 1px solid var(--border);
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-code);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+            position: relative;
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        pre::before {
+            content: 'bash';
+            display: block;
+            background: var(--bg-code-header);
+            padding: 0.5rem 1rem;
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        pre code {
+            display: block;
+            background: none;
+            padding: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            overflow-x: auto;
+            border: none;
+        }
+
+        .comment { color: var(--text-muted); font-style: italic; }
+        .keyword { color: var(--accent-purple); }
+        .string { color: var(--accent-green); }
+        .command { color: var(--accent-teal); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+        }
+
+        th, td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: #fff;
+        }
+
+        td {
+            background: var(--bg-code);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 2.5rem 0;
+        }
+
+        .diagram {
+            background: var(--bg-code);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+        }
+
+        .diagram::before {
+            content: 'diagram';
+            display: block;
+            background: var(--bg-code-header);
+            padding: 0.5rem 1rem;
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .diagram-content {
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+            color: var(--accent-teal);
+        }
+
+        .output {
+            color: var(--text-muted);
+            font-style: italic;
+            margin: -0.5rem 0 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding-left: 2rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+
+        .checklist li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                padding: 40px 28px;
+                margin: 24px 16px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 2.05rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+            }
+        }
+
+        @media print {
+            body {
+                background: var(--bg-primary);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body::before,
+            body::after {
+                display: none;
+            }
+
+            h2 {
+                page-break-after: avoid;
+            }
+
+            pre, .diagram {
+                page-break-inside: avoid;
+            }
+        }
+
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-content">
+
+<h1>Claude Code for Everyone: A Briefing Doc</h1>
+<p>Because coding agents broke containment and now your non-programmer friends are building apps</p>
+
+<h2>How to Use This Doc</h2>
+
+<p><strong>Just want to start?</strong> Jump to <a href="#quick-start">Quick Start</a></p>
+
+<p><strong>Want to understand first?</strong> Read the sections in order:</p>
+<ol>
+    <li><a href="#executive-summary">Executive Summary</a> - What is this?</li>
+    <li><a href="#chat-vs-agent">The Fundamental Shift: Chat vs Agent</a> - Why this is different from ChatGPT</li>
+    <li><a href="#why-local-files">Why Local Files Matter</a> - The file system advantage</li>
+    <li><a href="#three-paths">Three Paths</a> - Which tool for you?</li>
+    <li><a href="#terminal-basics">Terminal Basics</a> - The scary-looking thing demystified</li>
+    <li><a href="#terminal-101">Terminal 101: Keyboard Shortcuts</a> - Navigate like a pro</li>
+    <li><a href="#how-to-chat">How to Chat with Claude Code</a> - Get better results</li>
+    <li><a href="#getting-started">Getting Started</a> - Step-by-step walkthrough</li>
+    <li><a href="#security-privacy">Security & Privacy</a> - What's safe, what's not</li>
+</ol>
+
+<p><strong>Looking something up?</strong> Use Cmd+F to search, or check:</p>
+<ul>
+    <li><a href="#jargon-table">Jargon Translation Table</a> - Dev speak → English</li>
+    <li><a href="#key-terms">Key Terms Explained</a> - What does X mean?</li>
+</ul>
+
+<hr>
+
+<h2>🔑 Essential Terms (Read This First!)</h2>
+
+<p><strong>Before you dive in, here are 6 terms you'll see throughout this guide:</strong></p>
+
+<p><strong>Terminal/CLI</strong></p>
+<ul>
+    <li>The "black screen with text" - it's just a way to control your computer by typing instead of clicking</li>
+    <li>Think: texting commands to your computer instead of clicking buttons</li>
+    <li>On Mac: Applications → Utilities → Terminal (or Cmd+Space, type "terminal")</li>
+</ul>
+
+<p><strong>Claude Code</strong></p>
+<ul>
+    <li>The AI tool this guide teaches you to use</li>
+    <li>Runs in your Terminal and can actually create/edit files on your computer</li>
+    <li>Different from claude.ai (which just gives you text to copy)</li>
+</ul>
+
+<p><strong>Git/GitHub</strong></p>
+<ul>
+    <li><strong>Git</strong> = "Track Changes" for your whole project folder (undo button for coding)</li>
+    <li><strong>GitHub</strong> = Website that stores your code projects (like Dropbox, but for code)</li>
+    <li>You'll use Git to save snapshots of your work</li>
+</ul>
+
+<p><strong>Artifact</strong></p>
+<ul>
+    <li>When you ask Claude on claude.ai to create something, the interactive preview that appears</li>
+    <li>Example: Ask for a calculator → working calculator appears in the right panel</li>
+    <li>These live in the cloud (vs Claude Code which creates real files on your Mac)</li>
+</ul>
+
+<p><strong>npm</strong></p>
+<ul>
+    <li>Like an App Store for code building blocks</li>
+    <li>Instead of building everything from scratch, you can install pre-made pieces</li>
+    <li>Commands like <code>npm install</code> or <code>npm start</code></li>
+</ul>
+
+<p><strong>API</strong></p>
+<ul>
+    <li>How programs talk to each other (like a waiter between you and the kitchen)</li>
+    <li>Claude Code uses Anthropic's API to access Claude's AI brain</li>
+    <li>You don't need to manage this - it's included in your Claude Pro subscription</li>
+</ul>
+
+<p><strong>Pro tip:</strong> Don't try to memorize these! Just skim them now, come back when you see them in the guide and think "wait, what was that again?"</p>
+
+<hr>
+
+<h2 id="executive-summary">Executive Summary (The TL;DR)</h2>
+
+<p><strong>What happened:</strong> Claude Code (Anthropic's AI coding tool) has "broken containment" into mainstream consciousness. Non-technical people are suddenly realizing they can build actual apps—and you might be one of them.</p>
+
+<p><strong>The big insight:</strong> Your Claude Pro subscription ($20/month) already includes access to an AI that can code on your local Mac - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but now you can also run <code>claude</code> in your terminal and build things.</p>
+
+<p><strong>Why this matters:</strong> The interface is just... conversation. You describe what you want, Claude builds it.</p>
+
+<hr>
+
+<h2 id="chat-vs-agent">The Fundamental Shift: Chat vs Agent</h2>
+
+<p><strong>This isn't just another AI tool.</strong> Claude Code represents a different <em>category</em> of AI interaction—and understanding this difference matters for all knowledge work, not just coding.</p>
+
+<h3>The Old Way: AI as a Chat Partner</h3>
+
+<p><strong>What you're used to (ChatGPT, claude.ai, Gemini):</strong></p>
+
+<pre><code>You: <span class="string">"Write me a Python script to organize my photos"</span>
+AI:  <span class="string">"Here's the code: [code block]"</span>
+You: <span class="comment">*copy-paste into a file*</span>
+You: <span class="comment">*figure out how to run it*</span>
+You: <span class="comment">*realize it has a bug*</span>
+You: <span class="comment">*go back to chat, paste error*</span>
+AI:  <span class="string">"Ah, try this instead: [new code]"</span>
+You: <span class="comment">*copy-paste again*</span></code></pre>
+
+<p><strong>The pattern:</strong></p>
+<ul>
+    <li>AI gives you text (code, essays, summaries)</li>
+    <li><strong>You</strong> do the execution</li>
+    <li><strong>You</strong> handle the "last mile" (saving files, running commands, fixing issues)</li>
+    <li>AI is a <strong>consultant</strong> - smart, helpful, but hands-off</li>
+</ul>
+
+<p><strong>Great for:</strong></p>
+<ul>
+    <li>Brainstorming</li>
+    <li>Explaining concepts</li>
+    <li>Drafting text</li>
+    <li>Getting code snippets</li>
+    <li>Learning</li>
+</ul>
+
+<p><strong>Limitation:</strong></p>
+<ul>
+    <li>The gap between "here's the answer" and "it's actually working" is ALL on you</li>
+</ul>
+
+<h3>The New Way: AI as an Agent</h3>
+
+<p><strong>Claude Code (and similar agentic tools):</strong></p>
+
+<pre><code>You: <span class="string">"Create a photo organizer that sorts by date"</span>
+Claude Code: <span class="comment">*creates files*</span>
+           <span class="comment">*writes the code*</span>
+           <span class="comment">*tests it*</span>
+           <span class="comment">*finds a bug*</span>
+           <span class="comment">*fixes it*</span>
+           <span class="comment">*installs dependencies*</span>
+           <span class="comment">*shows you it works*</span>
+You: <span class="string">"Nice! Now add a GUI"</span>
+Claude Code: <span class="comment">*modifies files*</span>
+           <span class="comment">*adds interface*</span>
+           <span class="comment">*updates everything*</span>
+           Done.</code></pre>
+
+<p><strong>The pattern:</strong></p>
+<ul>
+    <li>AI doesn't just <em>suggest</em> actions - it <strong>performs</strong> them</li>
+    <li>It can read files, write files, run commands, check results</li>
+    <li>It handles the "last mile"</li>
+    <li>AI is an <strong>executor</strong> with judgment</li>
+</ul>
+
+<p><strong>The technical term:</strong> This is "agentic AI" - AI that can take actions in an environment, not just generate text.</p>
+
+<h3>What "Agentic" Actually Means</h3>
+
+<p><strong>Not agentic (chat):</strong></p>
+<pre><code>You: <span class="string">"Help me find that email from Sarah about the budget"</span>
+AI:  <span class="string">"I can't access your email, but try searching for 'from:sarah budget'"</span>
+You: <span class="comment">*manually searches*</span></code></pre>
+
+<p><strong>Agentic (if connected to your email):</strong></p>
+<pre><code>You: <span class="string">"Find that email from Sarah about the budget"</span>
+AI:  <span class="comment">*searches your email*</span>
+     <span class="comment">*finds 3 matches*</span>
+     <span class="comment">*reads them*</span>
+     <span class="string">"Found it - sent Jan 15, she proposed $50k for Q1. Want me to summarize?"</span></code></pre>
+
+<p><strong>The difference:</strong> The AI has <strong>tools</strong> it can use. In Claude Code's case:</p>
+<ul>
+    <li>File system (create, read, edit, delete files)</li>
+    <li>Terminal (run commands, install packages)</li>
+    <li>Web search (look up documentation)</li>
+    <li>Screenshot capability (see what's on your screen)</li>
+</ul>
+
+<h3>Why This Matters Beyond Coding</h3>
+
+<p><strong>The agentic pattern applies to ANY knowledge work where there's a gap between "knowing what to do" and "actually doing it."</strong></p>
+
+<p><strong>Examples where agentic AI changes the game:</strong></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Traditional Task</th>
+            <th>Chat AI Helps You...</th>
+            <th>Agentic AI Does...</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Data Analysis</strong></td>
+            <td>Explains how to analyze the CSV</td>
+            <td>Reads the CSV, runs analysis, generates charts, writes report</td>
+        </tr>
+        <tr>
+            <td><strong>Research</strong></td>
+            <td>Suggests search terms</td>
+            <td>Searches multiple sources, extracts key points, cross-references, writes synthesis</td>
+        </tr>
+        <tr>
+            <td><strong>Documentation</strong></td>
+            <td>Writes the doc</td>
+            <td>Reads your codebase, generates accurate docs, updates them when code changes</td>
+        </tr>
+        <tr>
+            <td><strong>Debugging</strong></td>
+            <td>Suggests what the bug might be</td>
+            <td>Reads your code, runs tests, identifies the bug, suggests AND tests the fix</td>
+        </tr>
+        <tr>
+            <td><strong>File Management</strong></td>
+            <td>Tells you the commands to organize files</td>
+            <td>Scans directories, creates structure, moves files, confirms results</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>The common thread:</strong> Agentic AI closes the "action gap" - the work between deciding what to do and having it done.</p>
+
+<h3>The Mental Model Shift</h3>
+
+<p><strong>Chat AI mindset:</strong></p>
+<ul>
+    <li>"Tell me how to do X"</li>
+    <li>You're the operator, AI is the advisor</li>
+    <li>You maintain all context (what's in your files, what you've tried, what failed)</li>
+</ul>
+
+<p><strong>Agentic AI mindset:</strong></p>
+<ul>
+    <li>"Do X for me" or "Help me do X"</li>
+    <li>AI is the operator (with your oversight), you're the director</li>
+    <li>AI discovers context (it can look at your files, check what exists, run diagnostics)</li>
+</ul>
+
+<p><strong>Example conversation difference:</strong></p>
+
+<p><strong>With chat AI:</strong></p>
+<pre><code>You: <span class="string">"My website isn't deploying to Netlify"</span>
+AI:  <span class="string">"Could be several issues. Check your build settings, verify the build command..."</span>
+You: <span class="comment">*checks each thing manually*</span>
+You: <span class="string">"The build command is 'npm run build'"</span>
+AI:  <span class="string">"That looks right. Check your output directory..."</span>
+You: <span class="comment">*keeps checking*</span></code></pre>
+
+<p><strong>With agentic AI:</strong></p>
+<pre><code>You: <span class="string">"My website isn't deploying to Netlify"</span>
+Claude Code: <span class="comment">*reads netlify.toml*</span>
+           <span class="comment">*checks package.json*</span>
+           <span class="comment">*runs build command locally*</span>
+           <span class="string">"Found it - your build outputs to 'dist' but Netlify config says 'build'.
+            Should I fix the config?"</span>
+You: <span class="string">"Yes"</span>
+Claude Code: <span class="comment">*updates netlify.toml*</span>
+           <span class="comment">*commits change*</span>
+           <span class="string">"Fixed. Try deploying now."</span></code></pre>
+
+<h3>When to Use Which</h3>
+
+<p><strong>Use Chat AI (claude.ai, ChatGPT) when:</strong></p>
+<ul>
+    <li>You need to think through a problem</li>
+    <li>You want to learn how something works</li>
+    <li>You're on mobile/tablet</li>
+    <li>You need quick answers without setup</li>
+    <li>The task is conversational (writing, brainstorming, explaining)</li>
+    <li>You don't want AI touching your actual files</li>
+</ul>
+
+<p><strong>Use Agentic AI (Claude Code) when:</strong></p>
+<ul>
+    <li>You need something <em>done</em>, not just explained</li>
+    <li>The task involves multiple steps (research → code → test → fix)</li>
+    <li>You're working with files/code on your computer</li>
+    <li>You want AI to handle the tedious parts</li>
+    <li>The task is hands-on (building, debugging, organizing, processing data)</li>
+    <li>You trust the AI enough to let it make changes (with your oversight)</li>
+</ul>
+
+<p><strong>The overlap:</strong> Many tasks benefit from BOTH:</p>
+<ol>
+    <li>Start with chat AI to brainstorm and plan</li>
+    <li>Move to agentic AI to execute and iterate</li>
+    <li>Return to chat AI for deeper questions or new directions</li>
+</ol>
+
+<h3>The Catch: Trust and Verification</h3>
+
+<p><strong>Chat AI is low-risk:</strong></p>
+<ul>
+    <li>It can't break anything</li>
+    <li>You review before executing</li>
+    <li>Easy to ignore bad advice</li>
+</ul>
+
+<p><strong>Agentic AI requires trust:</strong></p>
+<ul>
+    <li>It modifies your actual files</li>
+    <li>Mistakes can cascade (it could delete something important)</li>
+    <li>You need to understand enough to verify results</li>
+</ul>
+
+<p><strong>The safety mechanisms in Claude Code:</strong></p>
+<ol>
+    <li><strong>Git integration</strong> - Every change is tracked, reversible</li>
+    <li><strong>Working directory sandboxing</strong> - It only operates where you tell it</li>
+    <li><strong>Transparency</strong> - It shows you what it's doing before doing it</li>
+    <li><strong>You're in the loop</strong> - It asks permission for risky operations</li>
+</ol>
+
+<h3>The Future State</h3>
+
+<p><strong>Where this is heading:</strong></p>
+<ul>
+    <li>Your AI assistant doesn't just advise, it acts</li>
+    <li>From: "Here's how to fix your calendar conflicts" → "I've resolved your calendar conflicts"</li>
+    <li>From: "Here's a report on your sales data" → "I've analyzed sales data and updated your dashboard"</li>
+    <li>From: "Try this debugging approach" → "I've debugged it and pushed the fix"</li>
+</ul>
+
+<p><strong>Claude Code for programming is just the first mainstream example</strong> of this shift. The pattern will expand to:</p>
+<ul>
+    <li>Research assistants that compile reports, not just suggest sources</li>
+    <li>Data analysts that process datasets, not just recommend formulas</li>
+    <li>Project managers that update task boards, not just suggest priorities</li>
+</ul>
+
+<h3>What This Means for You</h3>
+
+<p><strong>If you're learning Claude Code:</strong></p>
+<ul>
+    <li>You're not just learning a coding tool</li>
+    <li>You're learning a new mode of working with AI</li>
+    <li>The skills transfer: delegation, verification, iteration with an AI executor</li>
+</ul>
+
+<p><strong>The mindset:</strong></p>
+<ul>
+    <li>Less "teach me to fish" → More "let's fish together"</li>
+    <li>You provide direction and judgment</li>
+    <li>AI provides execution and iteration speed</li>
+    <li>You verify results and steer direction</li>
+</ul>
+
+<p><strong>The unlock:</strong></p>
+<ul>
+    <li>Ideas you couldn't implement (no coding skills) → Implementable</li>
+    <li>Tedious multi-step tasks → Automated</li>
+    <li>"I know what I want but not how to build it" → Built</li>
+</ul>
+
+<hr>
+
+<h2 id="why-local-files">Why Local Files Matter (The Real Power)</h2>
+
+<p><strong>Yes, you can use claude.ai on mobile. Yes, it syncs across devices. But for real work, local files unlock something fundamentally different.</strong></p>
+
+<h3>The File System Advantage</h3>
+
+<p><strong>Real persistence:</strong></p>
+<ul>
+    <li>Web artifacts can disappear if the service changes</li>
+    <li>Local files are YOURS - copy them, back them up, they work forever</li>
+    <li>No internet needed once built (except to deploy)</li>
+</ul>
+
+<p><strong>Professional workflows:</strong></p>
+<ul>
+    <li>Git history tracks every change you make</li>
+    <li>Can use VS Code, Sublime, any editor you want</li>
+    <li>Terminal commands work (npm, git, custom scripts)</li>
+    <li>Integrate with tools like Photoshop, Figma exports, databases</li>
+</ul>
+
+<p><strong>Actual deployment:</strong></p>
+<ul>
+    <li>Files on your Mac can be deployed to real hosting (GitHub Pages, Vercel, your own server)</li>
+    <li>Web artifacts need export/recreation to go live seriously</li>
+    <li>Local means you own the deployment pipeline</li>
+</ul>
+
+<p><strong>Multi-file projects:</strong></p>
+<ul>
+    <li>Organize code into folders (<code>/components</code>, <code>/utils</code>, <code>/assets</code>)</li>
+    <li>Import/export between files properly</li>
+    <li>Build tools work (bundlers, compilers, preprocessors)</li>
+    <li>Can have hundreds of files - web artifacts get unwieldy past 3-5</li>
+</ul>
+
+<p><strong>Iteration speed (surprisingly):</strong></p>
+<ul>
+    <li>Claude Code sees ALL your files at once</li>
+    <li>Can refactor across multiple files in one go</li>
+    <li>Doesn't lose context when you close the browser</li>
+    <li>Can run the code locally to test immediately</li>
+</ul>
+
+<h3>The Mobile/Web Use Case (Still Valid!)</h3>
+
+<p><strong>Use claude.ai web when:</strong></p>
+<ul>
+    <li>You're on your phone/iPad</li>
+    <li>Quick throwaway prototypes</li>
+    <li>Sharing a demo link immediately</li>
+    <li>Learning/exploration without commitment</li>
+    <li>You don't want to set anything up</li>
+</ul>
+
+<p><strong>Use Claude Code (local) when:</strong></p>
+<ul>
+    <li>Building something you'll actually use/deploy</li>
+    <li>Multi-file projects</li>
+    <li>Need version control</li>
+    <li>Want to learn professional workflows</li>
+    <li>Integration with other tools matters</li>
+    <li>The project will live beyond this week</li>
+</ul>
+
+<h3>The "Sandbox" Isn't a Limitation - It's a Feature</h3>
+
+<p><strong>Yes, Claude Code works in your current folder (sandbox). But that's the POINT:</strong></p>
+
+<p><strong>The file system enables:</strong></p>
+<pre><code>your-project/
+  ├── src/              ← Source code
+  ├── assets/           ← Images, fonts
+  ├── tests/            ← Test files
+  ├── docs/             ← Documentation
+  ├── .git/             ← Version history
+  ├── node_modules/     ← Dependencies
+  └── package.json      ← Project config</code></pre>
+
+<p><strong>This structure means:</strong></p>
+<ul>
+    <li>Other developers can understand your project immediately (conventions)</li>
+    <li>Build tools know where to find things</li>
+    <li>You can have separate development and production configurations</li>
+    <li>CI/CD pipelines can automate deployment</li>
+    <li>It's how real software is built</li>
+</ul>
+
+<h3>The Bottom Line</h3>
+
+<p><strong>Mobile/web is great for ideas. Local files are for building.</strong></p>
+
+<ul>
+    <li>Sketch on mobile → Refine locally → Deploy to web</li>
+    <li>That's the real workflow for anything serious</li>
+</ul>
+
+<p><strong>Even if you only ever build one real project,</strong> going through the local files process teaches you how software actually works. And that knowledge transfers to EVERYTHING.</p>
+
+<hr>
+
+<h2 id="quick-start">Quick Start (For the Impatient)</h2>
+
+<p><strong>Skip the theory? Here's your 5-minute path to building something:</strong></p>
+
+<h3>Step 1: Open Terminal</h3>
+<pre><code><span class="comment"># On Mac: Press Cmd+Space, type "terminal", hit Enter</span></code></pre>
+<p><strong>You'll see:</strong> A window with text (might say your username and a <code>$</code> or <code>%</code> symbol)</p>
+<p><strong>If nothing happens:</strong> Make sure you fully typed "terminal" and pressed Enter (not just clicked away)</p>
+
+<hr>
+
+<h3>Step 2: Install Claude Code</h3>
+<pre><code><span class="comment"># Copy-paste this whole line:</span>
+<span class="command">curl</span> -fsSL https://claude.ai/install.sh | <span class="command">bash</span></code></pre>
+
+<p><strong>You'll see:</strong> Text scrolling as it downloads and installs (takes 30-60 seconds)</p>
+
+<p><strong>Troubleshooting:</strong></p>
+<ul>
+    <li><strong>"curl: command not found"</strong> → Your Mac should prompt you to install developer tools. Click "Install" and wait (this is a one-time thing, takes 5-10 min)</li>
+    <li><strong>"Permission denied"</strong> → This is normal! The installer will handle it. If it asks for your Mac password, enter it (you won't see dots/stars as you type - that's normal security)</li>
+    <li><strong>Installation seems stuck</strong> → Wait at least 2 minutes. If still stuck, press Ctrl+C, close Terminal, reopen it, and try again</li>
+</ul>
+
+<hr>
+
+<h3>Step 3: Create a project folder</h3>
+<pre><code><span class="command">mkdir</span> ~/my-first-project && <span class="command">cd</span> ~/my-first-project</code></pre>
+
+<p><strong>You'll see:</strong> Nothing! (In Terminal, silence means success)</p>
+
+<p><strong>What this did:</strong></p>
+<ul>
+    <li>Created a folder called "my-first-project" in your home directory</li>
+    <li>Moved you into that folder (your "working directory")</li>
+</ul>
+
+<p><strong>Troubleshooting:</strong></p>
+<ul>
+    <li><strong>"File exists"</strong> → You already have a folder with that name. Try <code>mkdir ~/my-first-project-2 && cd ~/my-first-project-2</code> instead</li>
+</ul>
+
+<hr>
+
+<h3>Step 4: Launch Claude Code</h3>
+<pre><code><span class="command">claude</span></code></pre>
+
+<p><strong>You'll see:</strong> A welcome screen that looks something like:</p>
+<pre><code>┌─ Welcome to Claude Code ─────────────────┐
+│                                          │
+│ Current directory: ~/my-first-project    │
+│                                          │
+│ What would you like to build?           │
+│ >                                        │
+└──────────────────────────────────────────┘</code></pre>
+
+<p><strong>Troubleshooting:</strong></p>
+<ul>
+    <li><strong>"command not found: claude"</strong> →
+        <ul>
+            <li>Close Terminal completely (Cmd+Q)</li>
+            <li>Reopen Terminal</li>
+            <li>Try <code>claude</code> again (installation needs a fresh Terminal session)</li>
+            <li>Still not working? Run <code>which claude</code> - if it shows nothing, reinstall (Step 2)</li>
+        </ul>
+    </li>
+    <li><strong>"Authentication required"</strong> → You need to log in. The terminal will show a link - click it or copy-paste into your browser, then log in with your Claude Pro account</li>
+    <li><strong>Terminal just returns to the prompt</strong> → Something went wrong. Try <code>claude --version</code> to see if it's installed. If you see a version number, try <code>claude</code> again</li>
+</ul>
+
+<hr>
+
+<h3>Step 5: Tell it what to build</h3>
+<pre><code>Make me a simple timer with start, stop, and reset buttons</code></pre>
+<p>(Type this at the <code>></code> prompt and press Enter)</p>
+
+<p><strong>You'll see:</strong> Claude thinking, then creating files. It will show you:</p>
+<ul>
+    <li>What files it's creating (like <code>index.html</code>, <code>script.js</code>, <code>styles.css</code>)</li>
+    <li>What code it's writing</li>
+    <li>When it's done</li>
+</ul>
+
+<p><strong>Then open your creation:</strong></p>
+<pre><code><span class="command">open</span> index.html</code></pre>
+
+<p><strong>You'll see:</strong> Your browser opens with a working timer! You built that.</p>
+
+<p><strong>Troubleshooting:</strong></p>
+<ul>
+    <li><strong>Nothing opens</strong> → Check if <code>index.html</code> exists: type <code>ls</code> and press Enter. You should see <code>index.html</code> in the list. If not, Claude might have used a different filename - ask it "What files did you create?"</li>
+    <li><strong>"The file couldn't be opened"</strong> → Make sure you're in the right folder. Type <code>pwd</code> to check - you should see something ending in <code>my-first-project</code></li>
+    <li><strong>Browser shows code instead of a timer</strong> → The file extension might be wrong. Right-click the file in Finder → Get Info → Open with: Safari (or Chrome)</li>
+</ul>
+
+<hr>
+
+<h3>What happens next</h3>
+
+<p><strong>Want changes?</strong> Just ask Claude! Type your request at the <code>></code> prompt:</p>
+<pre><code>Make the buttons bigger and add a dark mode toggle</code></pre>
+
+<p><strong>To exit Claude Code:</strong> Press Ctrl+D or type <code>exit</code></p>
+
+<p><strong>Come back to this doc</strong> when you want to understand what just happened, or jump to <a href="#terminal-basics">Terminal Basics</a> to learn what all those commands meant.</p>
+
+<hr>
+
+<p><strong>Prefer clicking over typing?</strong> Download Claude Desktop from <a href="https://claude.com/download">claude.com/download</a> — same coding powers, visual interface.</p>
+
+<hr>
+
+<h2 id="three-paths">Three Paths, Choose Your Adventure</h2>
+
+<h3>Option 1: Claude Desktop (Now With Claude Code!)</h3>
+<ul>
+    <li>Visual app on your Mac/Windows/Linux</li>
+    <li>Familiar chat interface with coding superpowers</li>
+    <li><strong>Current status:</strong> Claude Code is now integrated into the Desktop app</li>
+    <li><strong>Best for:</strong> People who want a visual interface without learning Terminal</li>
+    <li><strong>Bonus:</strong> Can run multiple coding sessions in parallel</li>
+</ul>
+
+<h3>Option 2: Claude CLI (What This Doc Covers)</h3>
+<ul>
+    <li>Terminal-based (that "hacker screen" thing—don't worry, it's friendlier than it looks)</li>
+    <li>Type <code>claude</code> and get a conversational coding agent</li>
+    <li><strong>Current status:</strong> Live, included with Claude Pro</li>
+    <li><strong>Best for:</strong> Anyone willing to learn basic terminal use</li>
+    <li><strong>Key advantage:</strong> Your code lives on YOUR computer, not in the cloud</li>
+</ul>
+
+<h3>Option 3: Continue Using claude.ai</h3>
+<ul>
+    <li>Web interface you know</li>
+    <li>Good for chat, artifacts, general use</li>
+    <li><strong>Privacy tip:</strong> Check Settings → Privacy → Enable "Don't train on my data" (not on by default)</li>
+    <li><strong>Trade-off:</strong> Artifacts are in the cloud (but you can export)</li>
+</ul>
+
+<hr>
+
+<h2 id="terminal-basics">Terminal Basics for Normal Humans</h2>
+
+<h3>What IS the Terminal?</h3>
+
+<p><strong>The honest truth:</strong> That black screen with green text from hacker movies? It's just texting your computer instead of clicking buttons. That's it. No magic, no hacking skills required.</p>
+
+<p><strong>Think of it like a restaurant:</strong></p>
+<ul>
+    <li><strong>Clicking around (GUI)</strong> = Looking at a menu with pictures, pointing at what you want</li>
+    <li><strong>Using Terminal (CLI)</strong> = Texting your order directly to the kitchen</li>
+</ul>
+
+<p>Both get you food. The text version is faster once you learn the "menu" (commands). And with Claude Code, you don't even need to memorize the menu—Claude knows it for you.</p>
+
+<p><strong>Why Terminal feels scary (but isn't):</strong></p>
+<ul>
+    <li>Movies made it look like hacking</li>
+    <li>Mistakes feel permanent (they're usually not—there's usually an undo)</li>
+    <li>No pictures or buttons to guide you</li>
+    <li><strong>The reframe:</strong> It's just a very literal conversation. You ask, computer answers.</li>
+</ul>
+
+<p><strong>macOS Terminal location:</strong></p>
+<ul>
+    <li>Applications → Utilities → Terminal</li>
+    <li>Or: Cmd+Space, type "terminal", hit Enter</li>
+</ul>
+
+<h3 id="terminal-101">Terminal 101: Keyboard Shortcuts You'll Actually Use</h3>
+
+<p>Once Terminal is open, these keyboard tricks will make you feel like a pro (even if you're not):</p>
+
+<h4>Navigating Command History</h4>
+
+<p><strong>The Up/Down arrow keys</strong> are your best friends:</p>
+<ul>
+    <li><strong>Up Arrow (↑):</strong> Shows your previous command</li>
+    <li><strong>Down Arrow (↓):</strong> Shows your next command (or returns to blank line)</li>
+    <li>Keep pressing Up to scroll through all your recent commands</li>
+</ul>
+
+<pre><code><span class="comment"># You typed this 5 minutes ago:</span>
+<span class="command">npm</span> install
+
+<span class="comment"># Press Up arrow → it appears again!</span>
+<span class="comment"># Press Enter to run it again</span></code></pre>
+
+<p><strong>Pro alternatives</strong> (for when you want to look fancy):</p>
+<ul>
+    <li><strong>Ctrl+P:</strong> Same as Up arrow (Previous command)</li>
+    <li><strong>Ctrl+N:</strong> Same as Down arrow (Next command)</li>
+</ul>
+
+<h4>Finding Old Commands Fast</h4>
+
+<p><strong>Ctrl+R</strong> = Reverse search (game-changer!)</p>
+
+<pre><code><span class="comment"># Press Ctrl+R, then start typing part of an old command</span>
+(reverse-i-search)<span class="string">`git`</span>: git commit -m <span class="string">"Added dark mode"</span>
+
+<span class="comment"># Keep pressing Ctrl+R to cycle through matches</span>
+<span class="comment"># Press Enter to run it, or Right Arrow to edit it first</span></code></pre>
+
+<p><strong>Real-world example:</strong></p>
+<ul>
+    <li>You ran a long command 2 hours ago</li>
+    <li>Press Ctrl+R, type <code>claude</code></li>
+    <li>Finds: <code>claude --model sonnet</code> (or whatever you ran)</li>
+    <li>No need to remember or retype the whole thing!</li>
+</ul>
+
+<h4>Moving Around in a Line</h4>
+
+<p>You typed a long command and spotted a typo at the beginning. Don't delete everything!</p>
+
+<p><strong>Option+Click</strong> (the Mac way):</p>
+<ul>
+    <li>Hold <strong>Option key</strong>, then <strong>click</strong> anywhere in your text</li>
+    <li>Cursor jumps to that spot instantly</li>
+    <li>Notice your mouse cursor turns into a crosshair when you hold Option</li>
+</ul>
+
+<p><strong>Keyboard alternatives:</strong></p>
+<ul>
+    <li><strong>Ctrl+A:</strong> Jump to the <strong>A</strong>start of the line</li>
+    <li><strong>Ctrl+E:</strong> Jump to the <strong>E</strong>nd of the line</li>
+    <li><strong>Option+Left Arrow:</strong> Jump back one <strong>word</strong> at a time</li>
+    <li><strong>Option+Right Arrow:</strong> Jump forward one <strong>word</strong> at a time</li>
+</ul>
+
+<pre><code><span class="comment"># You typed:</span>
+<span class="command">cd</span> ~/Dcuments/my-project
+   ^
+   <span class="comment"># Oops, typo! Need to add 'o' in Documents</span>
+
+<span class="comment"># Method 1: Hold Option, click between 'D' and 'c'</span>
+<span class="comment"># Method 2: Ctrl+A to go to start, then Option+Right to jump words</span></code></pre>
+
+<h4>Editing and Deleting</h4>
+
+<p><strong>Ctrl+K:</strong> <strong>K</strong>ill (delete) everything from cursor to end of line</p>
+<pre><code><span class="command">cd</span> ~/Documents/wrong-folder/more-wrong/nope
+              ↑ cursor here
+<span class="comment"># Press Ctrl+K → deletes "wrong-folder/more-wrong/nope"</span>
+<span class="comment"># Result: cd ~/Documents/</span></code></pre>
+
+<p><strong>Ctrl+U:</strong> Delete everything from cursor back to start</p>
+<pre><code><span class="command">git</span> commit -m <span class="string">"This message is way too long and rambling"</span>
+                                    ↑ cursor here
+<span class="comment"># Press Ctrl+U → deletes everything before cursor</span>
+<span class="comment"># Useful for starting over</span></code></pre>
+
+<p><strong>Ctrl+W:</strong> Delete the word before cursor</p>
+<pre><code><span class="command">git</span> commit -m <span class="string">"typo</span>
+               ↑
+<span class="comment"># Press Ctrl+W → deletes "typo"</span></code></pre>
+
+<h4>Other Life-Savers</h4>
+
+<p><strong>Ctrl+C:</strong> Stop/cancel the current command (if something's stuck)</p>
+<pre><code><span class="comment"># If a command is running forever or you made a mistake:</span>
+<span class="command">npm</span> install some-huge-package
+<span class="comment"># Loading... Loading... (taking too long!)</span>
+<span class="comment"># Press Ctrl+C to abort</span>
+^C  <span class="comment"># You'll see this appear</span></code></pre>
+
+<p><strong>Ctrl+L:</strong> Clear the screen (same as typing <code>clear</code>)</p>
+<ul>
+    <li>Terminal getting cluttered? Ctrl+L gives you a fresh screen</li>
+    <li>(Your command history is still there - scroll up to see it)</li>
+</ul>
+
+<p><strong>Tab:</strong> Auto-complete file/folder names</p>
+<pre><code><span class="command">cd</span> ~/Doc[TAB]
+<span class="comment"># Becomes: cd ~/Documents/</span>
+
+<span class="command">git</span> add my-rea[TAB]
+<span class="comment"># Becomes: git add my-readme.md</span></code></pre>
+
+<h4>Quick Reference Card</h4>
+
+<table>
+    <thead>
+        <tr>
+            <th>Shortcut</th>
+            <th>What It Does</th>
+            <th>When to Use It</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>↑ / ↓</strong></td>
+            <td>Browse command history</td>
+            <td>Running same commands repeatedly</td>
+        </tr>
+        <tr>
+            <td><strong>Ctrl+R</strong></td>
+            <td>Search old commands</td>
+            <td>"What was that command I ran yesterday?"</td>
+        </tr>
+        <tr>
+            <td><strong>Option+Click</strong></td>
+            <td>Jump cursor to position</td>
+            <td>Quick typo fixes</td>
+        </tr>
+        <tr>
+            <td><strong>Ctrl+A / Ctrl+E</strong></td>
+            <td>Jump to start/end of line</td>
+            <td>Editing long commands</td>
+        </tr>
+        <tr>
+            <td><strong>Option+← / →</strong></td>
+            <td>Jump by word</td>
+            <td>Navigating medium commands</td>
+        </tr>
+        <tr>
+            <td><strong>Ctrl+K</strong></td>
+            <td>Delete to end of line</td>
+            <td>Trimming end of command</td>
+        </tr>
+        <tr>
+            <td><strong>Ctrl+U</strong></td>
+            <td>Delete to start of line</td>
+            <td>Starting over</td>
+        </tr>
+        <tr>
+            <td><strong>Ctrl+C</strong></td>
+            <td>Cancel current command</td>
+            <td>Something's stuck or wrong</td>
+        </tr>
+        <tr>
+            <td><strong>Ctrl+L</strong></td>
+            <td>Clear screen</td>
+            <td>Clean up clutter</td>
+        </tr>
+        <tr>
+            <td><strong>Tab</strong></td>
+            <td>Auto-complete</td>
+            <td>Faster typing, fewer typos</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>The three you'll use every session:</strong></p>
+<ol>
+    <li><strong>Up Arrow</strong> - recall last command</li>
+    <li><strong>Ctrl+C</strong> - stop something</li>
+    <li><strong>Tab</strong> - auto-complete paths</li>
+</ol>
+
+<p><strong>Pro tip:</strong> You don't need to memorize all of these! Start with Up Arrow and Tab. Add more as you feel the need for them.</p>
+
+<h3>What Could Terminal Do Pre-Claude Code?</h3>
+
+<p>Your Mac's terminal has always been powerful - here are things you could already do:</p>
+
+<h4>File Management (The Basics)</h4>
+
+<pre><code><span class="command">pwd</span>           <span class="comment"># Print Working Directory - "where am I?"</span></code></pre>
+<p class="output">Output: <code>/Users/yourname</code> (shows your current location)</p>
+
+<pre><code><span class="command">ls</span>            <span class="comment"># List - "show me files here"</span></code></pre>
+<p class="output">Output: <code>Desktop  Documents  Downloads  Pictures</code> (your folders)</p>
+
+<pre><code><span class="command">cd</span> Documents  <span class="comment"># Change Directory - "go into this folder"</span>
+<span class="command">pwd</span>           <span class="comment"># Check where you are now</span></code></pre>
+<p class="output">Output: <code>/Users/yourname/Documents</code></p>
+
+<pre><code><span class="command">mkdir</span> my-project  <span class="comment"># Make Directory - "create new folder"</span>
+<span class="command">ls</span>                <span class="comment"># Check it was created</span></code></pre>
+<p class="output">Output: You'll see <code>my-project</code> in the list now</p>
+
+<h4>Running Programs</h4>
+<pre><code><span class="command">python</span> script.py      <span class="comment"># Run Python code</span>
+<span class="command">npm</span> start            <span class="comment"># Start a web app</span>
+<span class="command">open</span> file.html       <span class="comment"># Open file in browser</span></code></pre>
+
+<h4>Git (Version Control)</h4>
+<pre><code><span class="command">git</span> status           <span class="comment"># What changed?</span>
+<span class="command">git</span> add .            <span class="comment"># Stage changes</span>
+<span class="command">git</span> commit -m <span class="string">"msg"</span>  <span class="comment"># Save snapshot</span>
+<span class="command">git</span> push            <span class="comment"># Upload to GitHub</span></code></pre>
+
+<p><strong>Key insight:</strong> The terminal always had these powers. Claude Code just gives you an AI copilot that knows how to use them all.</p>
+
+<hr>
+
+<h2 id="how-to-chat">How to Chat with Claude Code Effectively</h2>
+
+<p><strong>Claude Code conversations are different from web chat. Here's how to get the best results:</strong></p>
+
+<h3>Start with Context</h3>
+
+<p><strong>Good:</strong> "Create a responsive dashboard with a sidebar and cards for displaying metrics"</p>
+
+<p><strong>Better:</strong> "Create a responsive admin dashboard. Sidebar on the left with nav links. Main area has 4 metric cards (users, revenue, orders, traffic). Use Tailwind for styling. Should work on mobile."</p>
+
+<p><strong>Why:</strong> More detail = fewer back-and-forth corrections. Claude makes better initial decisions when it knows your vision.</p>
+
+<h3>Be Iterative, Not Perfect</h3>
+
+<p><strong>You don't need to describe everything upfront.</strong> Build in layers:</p>
+
+<pre><code>You: <span class="string">"Create a todo app"</span>
+Claude: <span class="comment">*creates basic app*</span>
+
+You: <span class="string">"Add due dates to tasks"</span>
+Claude: <span class="comment">*adds date picker*</span>
+
+You: <span class="string">"Color code tasks - red if overdue, yellow if due today"</span>
+Claude: <span class="comment">*adds color logic*</span>
+
+You: <span class="string">"Add localStorage so tasks persist"</span>
+Claude: <span class="comment">*adds persistence*</span></code></pre>
+
+<p><strong>Pattern:</strong> Start simple → Add features one at a time → Refine details last</p>
+
+<h3>How to Ask for Changes</h3>
+
+<p><strong>Vague (slower):</strong></p>
+<ul>
+    <li>"Make it better"</li>
+    <li>"Fix the bug"</li>
+    <li>"Update the styling"</li>
+</ul>
+
+<p><strong>Specific (faster):</strong></p>
+<ul>
+    <li>"Make the buttons 20% larger and use rounded corners"</li>
+    <li>"The timer stops when I switch tabs - keep it running in the background"</li>
+    <li>"Change the color scheme to dark mode - dark gray background with white text"</li>
+</ul>
+
+<p><strong>With code references:</strong></p>
+<ul>
+    <li>"In the calculateTotal function, it's not including tax. Add 8% sales tax"</li>
+    <li>"The header component is too tall on mobile - make it 60px instead of 100px"</li>
+</ul>
+
+<h3>Common Conversation Patterns</h3>
+
+<p><strong>Bug fixing:</strong></p>
+<pre><code>You: <span class="string">"When I click delete, nothing happens"</span>
+Claude: <span class="comment">*reads code, identifies issue*</span>
+       <span class="string">"Found it - event listener wasn't attached. Fixed."</span></code></pre>
+
+<p><strong>Refactoring:</strong></p>
+<pre><code>You: <span class="string">"This code is repetitive - can you make it cleaner?"</span>
+Claude: <span class="comment">*extracts reusable functions, consolidates logic*</span></code></pre>
+
+<p><strong>Learning mode:</strong></p>
+<pre><code>You: <span class="string">"How does the dark mode toggle work? Explain the code"</span>
+Claude: <span class="comment">*walks through the logic with annotations*</span></code></pre>
+
+<p><strong>Adding features:</strong></p>
+<pre><code>You: <span class="string">"Add a search bar that filters the list"</span>
+Claude: <span class="comment">*adds input field, implements filter logic*</span></code></pre>
+
+<h3>What Claude Code Can See</h3>
+
+<p><strong>Claude knows about:</strong></p>
+<ul>
+    <li>All files in your current folder</li>
+    <li>Your folder structure</li>
+    <li>Recently run commands (from the session)</li>
+    <li>Error messages (if you show them)</li>
+</ul>
+
+<p><strong>Claude doesn't know:</strong></p>
+<ul>
+    <li>What's in other folders (unless you <code>cd</code> there)</li>
+    <li>What happened in previous sessions (unless you remind it)</li>
+    <li>What your browser shows (unless you describe it or take a screenshot)</li>
+</ul>
+
+<p><strong>Pro tip:</strong> If Claude seems confused, give more context:</p>
+<ul>
+    <li>"I'm in the <code>my-project</code> folder which has index.html and app.js"</li>
+    <li>"When I open index.html, the buttons don't respond to clicks"</li>
+    <li>"The console shows: TypeError: Cannot read property 'addEventListener' of null"</li>
+</ul>
+
+<h3>Session Management</h3>
+
+<p><strong>Starting fresh:</strong></p>
+<pre><code><span class="comment"># Each time you run `claude`, it's a new session</span>
+<span class="command">claude</span></code></pre>
+
+<p><strong>Claude remembers within a session:</strong></p>
+<ul>
+    <li>Files it created/edited</li>
+    <li>Your requests during this conversation</li>
+    <li>The context of the current project</li>
+</ul>
+
+<p><strong>Claude forgets between sessions:</strong></p>
+<ul>
+    <li>What you discussed yesterday</li>
+    <li>Why you made certain choices</li>
+    <li>The overall project goals</li>
+</ul>
+
+<p><strong>Solution:</strong> Recap when you return:</p>
+<pre><code>You: <span class="string">"I'm back working on the todo app. Last time we added dark mode.
+      Today I want to add categories for grouping tasks."</span></code></pre>
+
+<h3>When Things Go Wrong</h3>
+
+<p><strong>If Claude's code doesn't work:</strong></p>
+
+<ol>
+    <li><strong>Describe what happened:</strong>
+        <ul>
+            <li>"The timer starts but doesn't stop"</li>
+            <li>"I see a blank page"</li>
+            <li>"Console error: X is not defined"</li>
+        </ul>
+    </li>
+    <li><strong>Claude will diagnose and fix:</strong>
+        <ul>
+            <li>Reads the code</li>
+            <li>Identifies the issue</li>
+            <li>Proposes a fix</li>
+            <li>Updates the files</li>
+        </ul>
+    </li>
+    <li><strong>Test and iterate:</strong>
+        <ul>
+            <li>Try the fix</li>
+            <li>Report if it works or what's still wrong</li>
+            <li>Claude adjusts</li>
+        </ul>
+    </li>
+</ol>
+
+<p><strong>Don't be afraid to say "That didn't work"</strong> - it's part of the process!</p>
+
+<h3>Advanced: Multi-Step Requests</h3>
+
+<p><strong>You can ask Claude to do several things at once:</strong></p>
+
+<pre><code>You: <span class="string">"Create a weather app that:
+      1. Has an input for city name
+      2. Fetches data from OpenWeatherMap API
+      3. Displays current temp, conditions, and 5-day forecast
+      4. Uses nice icons for weather conditions
+      5. Stores last searched city in localStorage"</span></code></pre>
+
+<p><strong>Claude will:</strong> Break this down, tackle each piece, integrate them, and deliver a working app.</p>
+
+<h3>Conversation Tips Summary</h3>
+
+<p><strong>Do:</strong></p>
+<ul>
+    <li>✅ Give context upfront</li>
+    <li>✅ Be specific about what you want changed</li>
+    <li>✅ Build iteratively (simple → complex)</li>
+    <li>✅ Describe errors or unexpected behavior</li>
+    <li>✅ Ask for explanations when learning</li>
+</ul>
+
+<p><strong>Don't:</strong></p>
+<ul>
+    <li>❌ Expect perfection on first try (iteration is normal!)</li>
+    <li>❌ Assume Claude remembers previous sessions</li>
+    <li>❌ Say "it doesn't work" without describing what happened</li>
+    <li>❌ Ask for everything at once if you're just starting</li>
+</ul>
+
+<p><strong>Remember:</strong> Claude Code is collaborative. You're the director, Claude is the executor. Good communication = better results.</p>
+
+<hr>
+
+<h2 id="security-privacy">Security & Privacy Deep Dive</h2>
+
+<h3>Your Claude Pro Setup</h3>
+
+<p><strong>⚠️ FIRST: Check Your Privacy Settings</strong></p>
+<ul>
+    <li>Go to <a href="https://claude.ai" target="_blank">claude.ai</a> → Settings → Privacy</li>
+    <li>Find "<strong>Don't train on my data</strong>" setting</li>
+    <li><strong>This is NOT enabled by default</strong> - you must manually turn it on</li>
+    <li>Once enabled, applies to both claude.ai AND Claude CLI</li>
+</ul>
+
+<p><strong>What "Don't train on my data" means when enabled:</strong></p>
+<ul>
+    <li>30-day data retention for feedback transcripts (debugging, if things break)</li>
+    <li>After 30 days, your conversations get deleted</li>
+    <li>Anthropic can't use your code to train new models</li>
+</ul>
+
+<p><strong>What you're paying for with Claude Pro:</strong></p>
+<ul>
+    <li>Claude Pro subscription ($20/month)</li>
+    <li>Higher usage limits and priority access</li>
+    <li>Access to the most capable Claude models</li>
+    <li><em>The ability to enable "Don't train on my data" (but you must turn it on yourself)</em></li>
+</ul>
+
+<h3>Understanding the Data Flow</h3>
+
+<div class="diagram"><div class="diagram-content">┌─────────────────────────────────────────┐
+│ YOUR COMPUTER (macOS)                   │
+│                                         │
+│  Terminal → Claude CLI                  │
+│       ↓                                 │
+│  Reads your files locally               │
+│       ↓                                 │
+│  Sends context to →                     │
+└─────────────────────┬───────────────────┘
+                      │
+                      ↓ (HTTPS - encrypted)
+         ┌────────────────────────┐
+         │ ANTHROPIC'S SERVERS    │
+         │                        │
+         │ Claude processes       │
+         │ Returns response       │
+         └────────────────────────┘
+                      ↓
+         ┌────────────────────────┐
+         │ BACK TO YOUR COMPUTER  │
+         │                        │
+         │ Creates/modifies files │
+         │ ALL LOCAL              │
+         └────────────────────────┘</div></div>
+
+<p><strong>The trade-off:</strong></p>
+<ul>
+    <li><strong>Cloud dependency:</strong> Needs internet, sends your code to Anthropic's API</li>
+    <li><strong>Privacy level:</strong> Better than services that train on your data, but not as private as 100% local AI</li>
+    <li><strong>Alternative:</strong> Cursor offers "Privacy Mode" where code never leaves your computer (but different product, different price)</li>
+</ul>
+
+<h3>Sandboxing & Safeguards</h3>
+
+<p><strong>What is sandboxing?</strong><br>
+Think of it like giving someone keys to ONE room in your house, not the whole house:</p>
+<ul>
+    <li>They can rearrange furniture in that room (modify project files)</li>
+    <li>They can't wander into your bedroom (access personal files elsewhere)</li>
+    <li>They definitely can't knock down walls (mess with system files)</li>
+</ul>
+
+<p>The program runs in a restricted environment where it can't:</p>
+<ul>
+    <li>Delete your entire hard drive</li>
+    <li>Access files outside its designated area</li>
+    <li>Install malware</li>
+    <li>Mess with system files</li>
+</ul>
+
+<p><strong>Claude Code's approach:</strong></p>
+<ol>
+    <li><strong>Working directory:</strong> It operates in folders you explicitly navigate to</li>
+    <li><strong>Permission model:</strong> macOS security prompts when accessing sensitive areas</li>
+    <li><strong>Git integration:</strong> Version control = undo button for any changes</li>
+    <li><strong>You're always in the loop:</strong> It shows you what it's doing before executing</li>
+</ol>
+
+<p><strong>Best practices:</strong></p>
+<pre><code><span class="comment"># Create a sandbox folder for experiments</span>
+<span class="command">mkdir</span> ~/claude-projects
+<span class="command">cd</span> ~/claude-projects
+
+<span class="comment"># Or use version control</span>
+<span class="command">git</span> init my-new-project
+<span class="command">cd</span> my-new-project
+<span class="command">claude</span></code></pre>
+
+<p><strong>Pro tip:</strong> Start projects in a dedicated folder. If things go sideways, you can delete the whole folder. Your real files elsewhere stay safe.</p>
+
+<hr>
+
+<h2>Implementation Strategy Matrix</h2>
+
+<h3>Quick Comparison: Ways to Build with AI</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Feature</th>
+            <th>Claude CLI</th>
+            <th>Claude Desktop</th>
+            <th>claude.ai</th>
+            <th>Cursor</th>
+            <th>Bolt/Lovable</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Cost</strong></td>
+            <td>Included w/ Pro</td>
+            <td>Included w/ Pro</td>
+            <td>Included w/ Pro</td>
+            <td>$20/mo</td>
+            <td>$15-20/mo</td>
+        </tr>
+        <tr>
+            <td><strong>Where files live</strong></td>
+            <td>Local</td>
+            <td>Local</td>
+            <td>Cloud</td>
+            <td>Local</td>
+            <td>Cloud</td>
+        </tr>
+        <tr>
+            <td><strong>Internet required</strong></td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Partial</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td><strong>GitHub integration</strong></td>
+            <td>Yes</td>
+            <td>Yes</td>
+            <td>Manual</td>
+            <td>Yes</td>
+            <td>Built-in</td>
+        </tr>
+        <tr>
+            <td><strong>Best for</strong></td>
+            <td>Terminal users</td>
+            <td>Visual interface</td>
+            <td>Quick prototypes</td>
+            <td>Pro devs</td>
+            <td>Quick apps</td>
+        </tr>
+        <tr>
+            <td><strong>Learning curve</strong></td>
+            <td>Medium</td>
+            <td>Low</td>
+            <td>Low</td>
+            <td>Medium</td>
+            <td>Low</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Decision Tree: Which Tool When?</h3>
+
+<div class="diagram"><div class="diagram-content">START: What are you building?
+
+├─ Quick prototype/demo (< 1 hour)
+│  └─ Use: claude.ai Artifacts
+│     ↳ Single HTML file
+│     ↳ Share link instantly
+│     ↳ Limitation: Stuck in cloud
+
+├─ Personal project/learning
+│  └─ Use: Claude CLI
+│     ↳ Files on your computer
+│     ↳ Full control
+│     ↳ Learn professional workflow
+
+├─ Serious app you'll maintain
+│  └─ Use: Claude CLI + Git + GitHub
+│     ↳ Version control from day 1
+│     ↳ Deploy to GitHub Pages
+│     ↳ Professional setup
+
+└─ Professional development work
+   └─ Consider: Cursor (privacy mode)
+      ↳ More control over AI behavior
+      ↳ Enterprise features
+      ↳ Different pricing model</div></div>
+
+<hr>
+
+<h2 id="getting-started">Getting Started: From Zero to First Project</h2>
+
+<h3>Prerequisites Checklist</h3>
+
+<p><strong>Already have:</strong></p>
+<ul>
+    <li>✅ MacOS computer</li>
+    <li>✅ Claude Pro subscription</li>
+    <li>⚠️ <strong>CHECK THIS:</strong> Go to <a href="https://claude.ai" target="_blank">claude.ai</a> → Settings → Privacy → Enable "Don't train on my data"</li>
+</ul>
+
+<p><strong>Need to install:</strong></p>
+<ol>
+    <li><strong>Claude Code</strong> (the easiest way - no Node.js needed!)
+        <pre><code><span class="comment"># Open Terminal and paste this one line:</span>
+<span class="command">curl</span> -fsSL https://claude.ai/install.sh | <span class="command">bash</span></code></pre>
+        That's it! This downloads and installs everything automatically.
+    </li>
+    <li><strong>Git</strong> (probably already installed, check with <code>git --version</code>)
+        <ul><li>If not installed, macOS will prompt you to install it</li></ul>
+    </li>
+</ol>
+
+<p><strong>Alternative installation</strong> (if you prefer npm):</p>
+<ul>
+    <li>First install Node.js from nodejs.org</li>
+    <li>Then: <code>npm install -g @anthropic-ai/claude-code</code></li>
+</ul>
+
+<h3>Your First Session (Detailed Walkthrough)</h3>
+
+<p><strong>Already did Quick Start?</strong> This section goes deeper into what's happening at each step. If you just want to try it, jump to <a href="#quick-start">Quick Start</a> instead.</p>
+
+<p><strong>Step 1:</strong> Open Terminal and create a project folder</p>
+<pre><code><span class="command">mkdir</span> ~/claude-projects/my-first-app
+<span class="command">cd</span> ~/claude-projects/my-first-app</code></pre>
+
+<p><strong>What you'll see:</strong> Nothing! The command completes silently.</p>
+
+<p><strong>What actually happened:</strong></p>
+<pre><code>Your Mac's file system:
+/Users/yourname/
+  ├── Desktop/
+  ├── Documents/
+  ├── Downloads/
+  └── claude-projects/          ← Just created this!
+      └── my-first-app/         ← You're now "inside" this folder</code></pre>
+
+<p><strong>Verify it worked:</strong> Type <code>pwd</code> and press Enter</p>
+<pre><code><span class="command">pwd</span>
+<span class="comment"># Output: /Users/yourname/claude-projects/my-first-app</span></code></pre>
+
+<hr>
+
+<p><strong>Step 2:</strong> Start Claude Code</p>
+<pre><code><span class="command">claude</span></code></pre>
+
+<p><strong>What you'll see:</strong> After 1-2 seconds, a welcome interface appears:</p>
+
+<pre><code>┌─────────────────────────────────────────────────┐
+│ Welcome to Claude Code                          │
+│                                                 │
+│ I can help you build and modify code in:       │
+│ /Users/yourname/claude-projects/my-first-app   │
+│                                                 │
+│ What would you like to build?                  │
+│ >                                               │
+└─────────────────────────────────────────────────┘</code></pre>
+
+<p>The blinking cursor after <code>></code> means Claude is waiting for your instructions.</p>
+
+<hr>
+
+<p><strong>Step 3:</strong> Tell it what to make (in plain English)</p>
+<pre><code>Create a simple timer app with start, stop, and reset buttons</code></pre>
+
+<p><strong>What you'll see:</strong> Claude's thought process displayed in real-time:</p>
+
+<pre><code>> Create a simple timer app with start, stop, and reset buttons
+
+I'll create a timer app for you with those controls.
+
+Creating files:
+  - index.html (the main page)
+  - styles.css (to make it look good)
+  - script.js (the timer logic)
+
+[Shows code being written...]
+
+✓ Created index.html
+✓ Created styles.css
+✓ Created script.js
+
+Your timer app is ready! Open index.html in your browser to try it.</code></pre>
+
+<p><strong>Behind the scenes:</strong> Claude just created 3 files in your <code>my-first-app</code> folder. You can see them in Finder if you navigate to your home folder → claude-projects → my-first-app.</p>
+
+<hr>
+
+<p><strong>Step 4:</strong> Open your creation</p>
+<pre><code><span class="command">open</span> index.html</code></pre>
+
+<p><strong>What you'll see:</strong> Your default browser launches and displays:</p>
+
+<pre><code>┌─────────────────────────┐
+│                         │
+│         00:00          │
+│                         │
+│  [Start] [Stop] [Reset] │
+│                         │
+└─────────────────────────┘</code></pre>
+
+<p>Click "Start" → the timer counts up! This is a real, working application. <strong>You built this.</strong></p>
+
+<hr>
+
+<p><strong>Step 5:</strong> Want changes? Just ask</p>
+<pre><code>Make the buttons bigger and add a dark mode toggle</code></pre>
+
+<p><strong>What you'll see:</strong> Claude modifies the existing files:</p>
+
+<pre><code>> Make the buttons bigger and add a dark mode toggle
+
+I'll update the app with those changes.
+
+Modifying files:
+  - styles.css (bigger buttons, dark mode styles)
+  - index.html (adding dark mode toggle)
+  - script.js (dark mode toggle logic)
+
+✓ Updated styles.css
+✓ Updated index.html
+✓ Updated script.js
+
+Changes applied! Refresh your browser to see the updates.</code></pre>
+
+<p><strong>In your browser:</strong> Press Cmd+R (Mac) to reload. Now you see:</p>
+<ul>
+    <li>Bigger buttons</li>
+    <li>A new "🌙" toggle in the corner</li>
+    <li>Click it → dark mode!</li>
+</ul>
+
+<hr>
+
+<p><strong>Step 6:</strong> Understanding what just happened</p>
+
+<p><strong>The conversation pattern:</strong></p>
+<ol>
+    <li>You describe what you want in plain English</li>
+    <li>Claude figures out what files/code are needed</li>
+    <li>Claude creates or modifies those files</li>
+    <li>You test the result</li>
+    <li>You iterate with more requests</li>
+</ol>
+
+<p><strong>The files are REAL:</strong></p>
+<ul>
+    <li>They're on your Mac (in <code>~/claude-projects/my-first-app</code>)</li>
+    <li>You can edit them manually (try opening index.html in TextEdit)</li>
+    <li>You can copy the whole folder and it still works</li>
+    <li>No internet needed to use the app (after it's built)</li>
+</ul>
+
+<p><strong>To exit Claude Code:</strong> Type <code>exit</code> or press Ctrl+D</p>
+
+<h3>Understanding the Interface</h3>
+
+<p>When you type <code>claude</code>, you get:</p>
+<div class="diagram"><div class="diagram-content">┌─ Welcome to Claude Code ─────────────────┐
+│                                          │
+│ Current directory: ~/claude-projects/... │
+│                                          │
+│ What would you like to build?           │
+│ >                                        │
+└──────────────────────────────────────────┘</div></div>
+
+<p><strong>Key differences from claude.ai:</strong></p>
+<ul>
+    <li>Can read/write files in current folder</li>
+    <li>Can run terminal commands (like git, npm)</li>
+    <li>Can take screenshots (for debugging visual stuff)</li>
+    <li>Can search the web</li>
+    <li>Multi-turn conversations about your codebase</li>
+</ul>
+
+<hr>
+
+<h2>Local vs Cloud: The Honest Trade-offs</h2>
+
+<h3>Local (Claude CLI) Advantages</h3>
+
+<p><strong>✅ Ownership:</strong></p>
+<ul>
+    <li>Files on your computer = you control them</li>
+    <li>No "platform lock-in"</li>
+    <li>Works offline (after initial generation)</li>
+</ul>
+
+<p><strong>✅ GitHub workflow:</strong></p>
+<ul>
+    <li>Push to GitHub</li>
+    <li>Deploy to GitHub Pages (free hosting!)</li>
+    <li>Professional version control</li>
+</ul>
+
+<p><strong>✅ Privacy:</strong></p>
+<ul>
+    <li>Source code lives locally</li>
+    <li>Can disconnect after building</li>
+</ul>
+
+<p><strong>✅ Integration:</strong></p>
+<ul>
+    <li>Use your favorite text editor</li>
+    <li>Real terminal access</li>
+    <li>Professional developer tools</li>
+</ul>
+
+<h3>Local Disadvantages</h3>
+
+<p><strong>❌ Setup complexity:</strong></p>
+<ul>
+    <li>Terminal learning curve</li>
+    <li>Initial installation (though it's easier now!)</li>
+    <li>Git configuration</li>
+</ul>
+
+<p><strong>❌ No mobile/tablet:</strong></p>
+<ul>
+    <li>Must be at your Mac</li>
+    <li>Can't tweak from phone (unless GitHub + CodeSandbox)</li>
+</ul>
+
+<p><strong>❌ Internet still needed:</strong></p>
+<ul>
+    <li>For Claude AI requests</li>
+    <li>For npm packages</li>
+    <li>For deploying</li>
+</ul>
+
+<h3>Cloud (claude.ai) Advantages</h3>
+
+<p><strong>✅ Instant start:</strong></p>
+<ul>
+    <li>No installation</li>
+    <li>Works anywhere (phone, tablet, any computer)</li>
+    <li>Just click "Create Artifact"</li>
+</ul>
+
+<p><strong>✅ Sharing:</strong></p>
+<ul>
+    <li>Get a link instantly</li>
+    <li>Others can remix</li>
+    <li>Built-in collaboration</li>
+</ul>
+
+<p><strong>✅ Lower barrier:</strong></p>
+<ul>
+    <li>No terminal needed</li>
+    <li>No Git knowledge required</li>
+    <li>Visual interface</li>
+</ul>
+
+<h3>Cloud Disadvantages</h3>
+
+<p><strong>❌ Export complexity:</strong></p>
+<ul>
+    <li>Manual copy-paste for complex projects</li>
+    <li>Loses some structure</li>
+    <li>Need to recreate locally if you want to deploy seriously</li>
+</ul>
+
+<p><strong>❌ Platform dependency:</strong></p>
+<ul>
+    <li>Tied to claude.ai availability</li>
+    <li>Subject to rate limits</li>
+    <li>Can't easily run professional workflows</li>
+</ul>
+
+<hr>
+
+<h2>Exporting from claude.ai to Local</h2>
+
+<p><strong>Made something cool in claude.ai and want it on your computer?</strong></p>
+
+<h3>The Easy Way (Recommended)</h3>
+<pre><code><span class="comment"># 1. Start Claude Code locally</span>
+<span class="command">claude</span>
+
+<span class="comment"># 2. Tell it what you built:</span>
+<span class="string">"I made an app in claude.ai that does [describe it].
+Can you recreate it locally?"</span>
+
+<span class="comment"># Claude will rebuild it with proper file structure.</span></code></pre>
+
+<h3>The Manual Way</h3>
+<ol>
+    <li>In claude.ai: Click the Artifact → "Copy code"</li>
+    <li>On your Mac: Create a file, paste the code
+        <pre><code><span class="command">mkdir</span> ~/my-project && <span class="command">cd</span> ~/my-project
+<span class="comment"># Use any text editor to create index.html, paste your code</span>
+<span class="command">open</span> index.html  <span class="comment"># Opens in browser</span></code></pre>
+    </li>
+</ol>
+
+<p><strong>Pro tip:</strong> If you think a project might grow, start in Claude Code from the beginning. Easier than exporting later.</p>
+
+<hr>
+
+<h2>Learning Path: Simple → Professional</h2>
+
+<h3>Start Here (Your First Projects)</h3>
+<p>Build with just HTML/CSS/JS—no frameworks, no complexity:</p>
+<ul>
+    <li>Calculator, timer, to-do list, simple games</li>
+    <li><strong>Why:</strong> Instant results, no setup headaches, learn fundamentals</li>
+</ul>
+
+<h3>Level Up (When Ready)</h3>
+<p>Add version control and multiple files:</p>
+<pre><code><span class="command">git</span> init                    <span class="comment"># Track your changes</span>
+<span class="command">git</span> add . && <span class="command">git</span> commit -m <span class="string">"First save"</span>  <span class="comment"># Save a snapshot</span></code></pre>
+<p><strong>Why:</strong> Safety net for experiments, professional habit</p>
+
+<h3>Go Pro (When You Feel Limited)</h3>
+<p>Modern tools solve real problems you'll eventually feel:</p>
+<ul>
+    <li><strong>React:</strong> When your app gets complex and repetitive</li>
+    <li><strong>Vite:</strong> When you need to bundle/optimize code</li>
+    <li><strong>Tailwind:</strong> When CSS becomes unwieldy</li>
+</ul>
+
+<p><strong>Golden rule:</strong> Add tools when you feel pain, not before. Claude Code can set up any of these when you're ready—just ask.</p>
+
+<hr>
+
+<h2>Workflow Diagram: The Full Loop</h2>
+
+<div class="diagram"><div class="diagram-content">┌─────────────────────────────────────────────────────────┐
+│                    IDEA PHASE                            │
+│  "I want to build a habit tracker"                      │
+└─────────────────┬───────────────────────────────────────┘
+                  ↓
+        ┌─────────────────┐
+        │  DECIDE TOOL    │
+        │  Quick? → .ai   │
+        │  Real? → CLI    │
+        └────────┬────────┘
+                 ↓
+┌────────────────────────────────────────────────────────┐
+│              DEVELOPMENT (CLI Example)                  │
+│                                                         │
+│  1. Setup                                              │
+│     mkdir habit-tracker && cd habit-tracker            │
+│     git init                                           │
+│     claude                                             │
+│                                                         │
+│  2. Build (Iterative)                                  │
+│     You: "Create habit tracker with..."               │
+│     Claude: *generates files*                          │
+│     You: "Add streak counter"                          │
+│     Claude: *modifies code*                            │
+│     You: "Make it prettier"                            │
+│     Claude: *updates styles*                           │
+│                                                         │
+│  3. Test locally                                       │
+│     open index.html (or npm run dev)                   │
+│                                                         │
+│  4. Version control                                    │
+│     git add .                                          │
+│     git commit -m "Working habit tracker"              │
+└────────────────┬───────────────────────────────────────┘
+                 ↓
+        ┌────────────────┐
+        │  DEPLOY        │
+        │  GitHub Pages  │
+        │  OR Vercel     │
+        │  OR Netlify    │
+        └────────┬───────┘
+                 ↓
+        ┌────────────────┐
+        │  SHARE         │
+        │  yourusername. │
+        │  github.io/    │
+        │  habit-tracker │
+        └────────────────┘</div></div>
+
+<h3>Continuous Iteration Loop</h3>
+
+<div class="diagram"><div class="diagram-content">                    ┌──────────┐
+                    │   USE    │
+                    │  Test it │
+                    └────┬─────┘
+                         │
+                         ↓
+                 ┌───────────────┐
+           ┌────→│   FEEDBACK    │←────┐
+           │     │ "Needs dark   │     │
+           │     │  mode!"       │     │
+           │     └───────┬───────┘     │
+           │             ↓             │
+           │     ┌───────────────┐     │
+           │     │   IMPROVE     │     │
+           │     │ Claude adds   │     │
+           │     │ features      │     │
+           │     └───────┬───────┘     │
+           │             ↓             │
+           │     ┌───────────────┐     │
+           └─────│   DEPLOY      │─────┘
+                 │ Push updates  │
+                 └───────────────┘</div></div>
+
+<hr>
+
+<h2 id="key-terms">Conceptual Demystification</h2>
+
+<h3>Key Terms, Plain English</h3>
+
+<p><strong>CLI (Command Line Interface):</strong></p>
+<ul>
+    <li>Text-based way to control your computer</li>
+    <li>Instead of clicking, you type commands</li>
+    <li>Example: <code>cd Documents</code> (go to Documents folder)</li>
+</ul>
+
+<p><strong>API (Application Programming Interface):</strong></p>
+<ul>
+    <li>How programs talk to each other (like a waiter taking your order to the kitchen)</li>
+    <li>Claude Code uses Anthropic's API to access Claude's "brain"</li>
+    <li>You don't manage the API key - included in your Pro subscription</li>
+    <li><strong>Don't overthink it:</strong> You use APIs every day without knowing (weather apps, maps, etc.)</li>
+</ul>
+
+<p><strong>Git (Version Control System):</strong></p>
+<ul>
+    <li>Like "Track Changes" in Word, but for your whole project folder</li>
+    <li>Save snapshots you can return to (like save points in a video game)</li>
+    <li>Messed something up? Go back to your last save</li>
+    <li>Example: <code>git commit</code> = save snapshot</li>
+</ul>
+
+<p><strong>GitHub:</strong></p>
+<ul>
+    <li>Website that hosts your Git projects</li>
+    <li>Like Dropbox, but designed for code</li>
+    <li>Free for public projects</li>
+</ul>
+
+<p><strong>Repository (Repo):</strong></p>
+<ul>
+    <li>A project folder with Git tracking</li>
+    <li>Lives on GitHub</li>
+    <li>Example: <code>github.com/yourname/habit-tracker</code></li>
+</ul>
+
+<p><strong>npm (Node Package Manager):</strong></p>
+<ul>
+    <li>Like an App Store, but for code building blocks</li>
+    <li>Someone already built a calendar widget? <code>npm install it</code> instead of making your own</li>
+    <li>Run projects: <code>npm start</code> or <code>npm run dev</code></li>
+    <li><strong>Analogy:</strong> Instead of making every ingredient from scratch, you buy pre-made pasta sauce</li>
+</ul>
+
+<p><strong>Localhost:</strong></p>
+<ul>
+    <li>Your computer pretending to be a web server</li>
+    <li>Address: <code>localhost:3000</code> or <code>localhost:5173</code></li>
+    <li>Only you can see it (until you deploy)</li>
+    <li><strong>Analogy:</strong> It's like a dress rehearsal. The performance is happening, but the audience (internet) can't see it yet.</li>
+</ul>
+
+<p><strong>Deploy/Deployment:</strong></p>
+<ul>
+    <li>Putting your project on the internet</li>
+    <li>Going from "only on my computer" to "anyone can visit"</li>
+    <li>Services: Vercel, Netlify, GitHub Pages</li>
+    <li><strong>Reframe:</strong> It sounds technical, but these services make it almost as easy as uploading a photo to social media</li>
+</ul>
+
+<p><strong>Build/Build Tool:</strong></p>
+<ul>
+    <li>Process that prepares your code for production</li>
+    <li>Combines files, optimizes images, etc.</li>
+    <li>Tools: Vite, Webpack, Parcel</li>
+</ul>
+
+<p><strong>Environment:</strong></p>
+<ul>
+    <li>Where code runs</li>
+    <li>Development = on your computer</li>
+    <li>Production = on the internet for users</li>
+</ul>
+
+<h3 id="jargon-table">Jargon Translation Table</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Dev Speak</th>
+            <th>Normal Human</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>"Clone the repo"</td><td>"Download the project"</td></tr>
+        <tr><td>"Push to origin"</td><td>"Upload changes to GitHub"</td></tr>
+        <tr><td>"Merge conflict"</td><td>"Two people edited same line"</td></tr>
+        <tr><td>"npm install"</td><td>"Download dependencies"</td></tr>
+        <tr><td>"Hot reload"</td><td>"Auto-refresh when you save"</td></tr>
+        <tr><td>"Localhost"</td><td>"Pretend website on your computer"</td></tr>
+        <tr><td>"Route"</td><td>"Page/screen in the app"</td></tr>
+        <tr><td>"Component"</td><td>"Reusable UI piece"</td></tr>
+        <tr><td>"Bundle"</td><td>"Combine code into one file"</td></tr>
+        <tr><td>"Deploy"</td><td>"Put on the internet"</td></tr>
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Strategic Recommendations</h2>
+
+<h3>For Complete Beginners</h3>
+
+<p><strong>Start with claude.ai Artifacts:</strong></p>
+<ol>
+    <li>Build 3-5 simple projects in browser</li>
+    <li>Export and learn to run locally</li>
+    <li>Then graduate to Claude CLI</li>
+</ol>
+
+<p><strong>Rationale:</strong></p>
+<ul>
+    <li>Lower friction = more learning</li>
+    <li>Understand what you're building before worrying about setup</li>
+    <li>Tools are means, not end</li>
+</ul>
+
+<h3>For "Vibe Coders" (People with Ideas, No CS Degree)</h3>
+
+<p><strong>Jump straight to Claude CLI:</strong></p>
+<ol>
+    <li>One afternoon to learn terminal basics</li>
+    <li>Skip the academic journey, learn by building</li>
+    <li>Non-technical people are doing this successfully—it works!</li>
+</ol>
+
+<p><strong>Best first projects:</strong></p>
+<ul>
+    <li>Personal dashboard</li>
+    <li>Simple game</li>
+    <li>Productivity tool you actually want</li>
+</ul>
+
+<p><strong>Key insight:</strong> You don't need to know how every line works. You need to:</p>
+<ul>
+    <li>Describe what you want clearly</li>
+    <li>Recognize when output is wrong</li>
+    <li>Iterate based on testing</li>
+</ul>
+
+<hr>
+
+<h2>Things to Watch Out For</h2>
+
+<h3>Security Considerations</h3>
+
+<p><strong>What Claude Code CAN do:</strong></p>
+<ul>
+    <li>Read any file in current directory</li>
+    <li>Write/modify files</li>
+    <li>Execute terminal commands</li>
+    <li>Install packages (if you confirm)</li>
+</ul>
+
+<p><strong>What it CAN'T do (without you noticing):</strong></p>
+<ul>
+    <li>Access files outside your project folder (unless you cd there)</li>
+    <li>Run commands without showing you</li>
+    <li>Install system-wide software (needs sudo password)</li>
+</ul>
+
+<p><strong>Golden rule:</strong></p>
+<ul>
+    <li>Always review code before running</li>
+    <li>Use Git so you can undo</li>
+    <li>Start in dedicated project folders</li>
+</ul>
+
+<h3>Privacy Mindset</h3>
+
+<p><strong>Remember:</strong></p>
+<ul>
+    <li>⚠️ <strong>Check your settings:</strong> <a href="https://claude.ai" target="_blank">claude.ai</a> → Settings → Privacy → "Don't train on my data" (NOT on by default)</li>
+    <li>Once enabled: 30-day retention for debugging, then deleted</li>
+    <li>All API calls still processed by Anthropic's servers (encrypted in transit)</li>
+</ul>
+
+<p><strong>For sensitive projects:</strong></p>
+<ul>
+    <li>Consider: Running on separate machine</li>
+    <li>Or: Use Cursor with Privacy Mode (different product)</li>
+    <li>Or: Local-only AI models (more technical, less capable)</li>
+</ul>
+
+<h3>Cost Management</h3>
+
+<p><strong>Claude Pro ($20/mo) includes:</strong></p>
+<ul>
+    <li>~45 messages every 5 hours (for typical conversations)</li>
+    <li>Weekly usage caps (added in 2025 to ensure fair access)</li>
+    <li>200,000-token context window (that's a LOT of code)</li>
+    <li>Priority access during busy times</li>
+    <li>Resets regularly, so use it!</li>
+</ul>
+
+<p><strong>Watch out for:</strong></p>
+<ul>
+    <li>Long-running tasks can use multiple messages from your quota</li>
+    <li>Complex projects might hit limits faster</li>
+    <li>Solution: Upgrade to Max ($100/mo for 5x usage, $200/mo for 20x) if needed</li>
+</ul>
+
+<h3>The "Magic Black Box" Problem</h3>
+
+<p><strong>Don't fall into trap of:</strong></p>
+<ul>
+    <li>Accepting all code without reading</li>
+    <li>Not understanding basic structure</li>
+    <li>Becoming dependent without fundamentals</li>
+</ul>
+
+<p><strong>Better approach:</strong></p>
+<ul>
+    <li>Ask Claude to explain major sections</li>
+    <li>Read the comments it writes</li>
+    <li>Modify small things yourself to learn</li>
+</ul>
+
+<hr>
+
+<h2>🚢 Quick Deploy Guide: GitHub Pages</h2>
+
+<p><strong>Why GitHub Pages:</strong></p>
+<ul>
+    <li>Free (no credit card needed)</li>
+    <li>Easy (a few clicks + one command)</li>
+    <li>No server needed (GitHub hosts it for you)</li>
+    <li>Custom domain support (if you want your own URL later)</li>
+    <li>Perfect for static sites (HTML/CSS/JS projects)</li>
+</ul>
+
+<h3>Step-by-Step Deploy</h3>
+
+<p><strong>Prerequisites:</strong> You need a free GitHub account. If you don't have one, go to <a href="https://github.com">github.com</a> → Sign Up (takes 2 minutes).</p>
+
+<hr>
+
+<h3>Part 1: Prepare Your Project Locally</h3>
+
+<p><strong>In your project folder</strong> (where your files are), initialize Git:</p>
+
+<pre><code><span class="comment"># Initialize Git tracking</span>
+<span class="command">git</span> init
+
+<span class="comment"># Stage all your files</span>
+<span class="command">git</span> add .
+
+<span class="comment"># Save a snapshot</span>
+<span class="command">git</span> commit -m <span class="string">"Initial commit: my awesome project"</span></code></pre>
+
+<p><strong>What you'll see:</strong> Git confirms the commit with something like:</p>
+<pre><code>[main (root-commit) abc1234] Initial commit: my awesome project
+ 3 files changed, 42 insertions(+)
+ create mode 100644 index.html
+ create mode 100644 script.js
+ create mode 100644 styles.css</code></pre>
+
+<hr>
+
+<h3>Part 2: Create a Repository on GitHub (The Website Part)</h3>
+
+<p><strong>Step 1:</strong> Open your browser and go to <a href="https://github.com/new">github.com/new</a></p>
+
+<p>(Or: Click the <strong>+</strong> icon in the top-right corner of GitHub → "New repository")</p>
+
+<p><strong>Step 2:</strong> Fill out the form:</p>
+
+<p><strong>Repository name:</strong> <code>my-timer-app</code> (must match your project folder name - or pick any name you want)</p>
+
+<p><strong>Description:</strong> (optional) "A simple timer with start/stop/reset buttons"</p>
+
+<p><strong>Public or Private?</strong></p>
+<ul>
+    <li><strong>Public</strong> = Anyone can see it (required for free GitHub Pages)</li>
+    <li><strong>Private</strong> = Only you can see it (GitHub Pages costs money for private repos)</li>
+</ul>
+
+<p><strong>IMPORTANT:</strong> Do NOT check these boxes:</p>
+<ul>
+    <li>❌ "Add a README file"</li>
+    <li>❌ "Add .gitignore"</li>
+    <li>❌ "Choose a license"</li>
+</ul>
+
+<p>(You already have files - these options are for starting from scratch)</p>
+
+<p><strong>Step 3:</strong> Click the green <strong>"Create repository"</strong> button</p>
+
+<hr>
+
+<h3>Part 3: Connect Your Local Project to GitHub</h3>
+
+<p><strong>You'll see a page with instructions.</strong> Look for the section that says:</p>
+<pre><code>…or push an existing repository from the command line</code></pre>
+
+<p><strong>Copy the commands shown</strong> (they'll have YOUR username). They look like:</p>
+
+<pre><code><span class="command">git</span> remote add origin https://github.com/YOUR-USERNAME/my-timer-app.git
+<span class="command">git</span> branch -M main
+<span class="command">git</span> push -u origin main</code></pre>
+
+<p><strong>Paste them into Terminal</strong> (in your project folder) and press Enter.</p>
+
+<p><strong>What you'll see:</strong> Git uploads your files:</p>
+<pre><code>Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 1.2 KiB | 1.2 MiB/s, done.
+Total 5 (delta 0), reused 0 (delta 0)
+To https://github.com/YOUR-USERNAME/my-timer-app.git
+ * [new branch]      main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.</code></pre>
+
+<p><strong>What this did:</strong> Your local files are now on GitHub! Refresh the GitHub page in your browser - you should see your files listed.</p>
+
+<hr>
+
+<h3>Part 4: Enable GitHub Pages (Make It Live!)</h3>
+
+<p><strong>Step 1:</strong> On your repo page, click <strong>"Settings"</strong> (top-right area, last tab in the menu)</p>
+
+<p><strong>Step 2:</strong> In the left sidebar, scroll down and click <strong>"Pages"</strong> (under "Code and automation")</p>
+
+<p><strong>Step 3:</strong> Under "Build and deployment":</p>
+
+<p><strong>Source:</strong> Select <strong>"Deploy from a branch"</strong> (should be default)</p>
+
+<p><strong>Branch:</strong></p>
+<ul>
+    <li>Click the dropdown (says "None")</li>
+    <li>Select <strong>"main"</strong></li>
+    <li>Leave the folder dropdown as <strong>"/ (root)"</strong></li>
+</ul>
+
+<p><strong>Step 4:</strong> Click <strong>"Save"</strong></p>
+
+<p><strong>You'll see:</strong> A blue/green box appears:</p>
+<pre><code>✓ Your site is live at https://YOUR-USERNAME.github.io/my-timer-app/</code></pre>
+
+<p>(Takes 30-60 seconds to build. Refresh the page if you don't see it yet)</p>
+
+<hr>
+
+<h3>Part 5: Visit Your Live Site!</h3>
+
+<p><strong>Click the link</strong> (or type it in your browser):</p>
+<pre><code>https://YOUR-USERNAME.github.io/my-timer-app/</code></pre>
+
+<p><strong>🎉 Your app is now on the internet!</strong> Anyone with the link can use it.</p>
+
+<hr>
+
+<h3>Making Updates Later</h3>
+
+<p><strong>After you change your code:</strong></p>
+
+<pre><code><span class="comment"># In your project folder</span>
+<span class="command">git</span> add .
+<span class="command">git</span> commit -m <span class="string">"Made buttons bigger"</span>
+<span class="command">git</span> push</code></pre>
+
+<p><strong>GitHub Pages auto-updates</strong> (takes 1-2 minutes). Refresh your live site to see changes.</p>
+
+<hr>
+
+<h3>Troubleshooting</h3>
+
+<p><strong>"404 - There isn't a GitHub Pages site here"</strong></p>
+<ul>
+    <li>Wait 2-3 minutes (first deployment is slow)</li>
+    <li>Check Settings → Pages → make sure branch is "main"</li>
+    <li>Make sure repo is Public (Settings → Danger Zone → Change visibility)</li>
+</ul>
+
+<p><strong>Page shows folder listing instead of website</strong></p>
+<ul>
+    <li>Make sure your main HTML file is named <code>index.html</code> (exactly, lowercase)</li>
+    <li>If it's named something else, rename it to <code>index.html</code></li>
+</ul>
+
+<p><strong>Site doesn't update after pushing changes</strong></p>
+<ul>
+    <li>Check if push succeeded: <code>git status</code> should say "nothing to commit, working tree clean"</li>
+    <li>Wait 2-3 minutes for GitHub Pages to rebuild</li>
+    <li>Hard refresh in browser: Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)</li>
+</ul>
+
+<p><strong>For React/Vite projects:</strong></p>
+<pre><code><span class="comment"># Add to vite.config.js:</span>
+base: <span class="string">'/projectname/'</span>
+
+<span class="comment"># Build:</span>
+<span class="command">npm</span> run build
+
+<span class="comment"># Deploy dist/ folder</span>
+<span class="comment"># (Use gh-pages package or manual)</span></code></pre>
+
+<hr>
+
+<h2>Other Tools Worth Knowing About</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tool</th>
+            <th>What It Is</th>
+            <th>When to Consider</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>VS Code + GitHub Copilot</strong></td>
+            <td>Code editor with AI autocomplete</td>
+            <td>You want traditional dev experience</td>
+        </tr>
+        <tr>
+            <td><strong>Cursor</strong></td>
+            <td>VS Code fork with deeper AI integration</td>
+            <td>Privacy-focused, or power users</td>
+        </tr>
+        <tr>
+            <td><strong>Lovable/Bolt/Replit</strong></td>
+            <td>Browser-based AI coding</td>
+            <td>Zero setup, works on any device</td>
+        </tr>
+        <tr>
+            <td><strong>claude.ai Artifacts</strong></td>
+            <td>Quick prototypes in browser</td>
+            <td>Fast experiments before going local</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Bottom line:</strong> Start with Claude Code. Explore others later if you hit specific needs.</p>
+
+<hr>
+
+<h2>Next Steps: Your Action Plan</h2>
+
+<h3>This Week</h3>
+<ul class="checklist">
+    <li>Open Terminal (Cmd+Space, type "terminal", hit Enter)</li>
+    <li>Try basic commands: <code>pwd</code> (where am I?), <code>ls</code> (what's here?)</li>
+    <li>Install Claude Code: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+    <li>Test it worked: <code>claude --version</code></li>
+    <li>If something feels broken: <code>claude doctor</code> (auto-diagnoses issues)</li>
+</ul>
+
+<h3>Next Week</h3>
+<ul class="checklist">
+    <li>Create <code>~/claude-projects</code> folder</li>
+    <li><code>cd ~/claude-projects</code></li>
+    <li><code>claude</code> - have first conversation</li>
+    <li>Build tiny project (calculator, timer)</li>
+    <li>Open result in browser</li>
+</ul>
+
+<h3>Next Month</h3>
+<ul class="checklist">
+    <li>Learn basic Git (<code>git init</code>, <code>add</code>, <code>commit</code>)</li>
+    <li>Create GitHub account</li>
+    <li>Push first project to GitHub</li>
+    <li>Deploy to GitHub Pages</li>
+    <li>Share link with friend</li>
+</ul>
+
+<h3>Next Quarter</h3>
+<ul class="checklist">
+    <li>Build project you actually want to use</li>
+    <li>Learn React basics (when vanilla JS feels limiting)</li>
+    <li>Contribute to open source (even just documentation!)</li>
+    <li>Help someone else get started</li>
+</ul>
+
+<hr>
+
+<h2>Final Thoughts: The New Normal</h2>
+
+<p><strong>What's actually changed:</strong></p>
+<ul>
+    <li>The barriers to building software are collapsing</li>
+    <li>"I'm not technical" matters less than "I can describe what I want clearly"</li>
+    <li>The skill shifted from memorizing syntax to clear thinking and iteration</li>
+</ul>
+
+<p><strong>What you still need to learn:</strong></p>
+<ul>
+    <li>How to describe what you want (prompt craft)</li>
+    <li>How to recognize when output is wrong</li>
+    <li>How to test and iterate</li>
+    <li>Basic concepts (this doc helps!)</li>
+</ul>
+
+<p><strong>Your advantage as a beginner:</strong></p>
+<ul>
+    <li>No bad habits to unlearn</li>
+    <li>Fresh perspective on how tools should work</li>
+    <li>You'll ask "why is this hard?" when veterans just accept it</li>
+</ul>
+
+<p><strong>What this enables:</strong></p>
+<ul>
+    <li>Build tools for your specific weird needs</li>
+    <li>Prototype ideas in hours, not weeks</li>
+    <li>Actually understand what software can do for you</li>
+</ul>
+
+<p><strong>So:</strong> Open that terminal. Type <code>claude</code>. Build something small. See what happens.</p>
+
+<p>The files really do live on your computer. That's the point.</p>
+
+<hr>
+
+<h2>Resources</h2>
+
+<p><strong>Official:</strong></p>
+<ul>
+    <li><a href="https://code.claude.com/docs">code.claude.com/docs</a> - Claude Code documentation</li>
+    <li><a href="https://claude.com/download">claude.com/download</a> - Desktop app download</li>
+    <li><a href="https://github.com/anthropics/claude-code">github.com/anthropics/claude-code</a> - Official repo</li>
+</ul>
+
+<p><strong>If Something Breaks:</strong></p>
+<ul>
+    <li>Run <code>claude doctor</code> - auto-diagnoses most issues</li>
+    <li><a href="https://support.claude.com">Claude Help Center</a> - Official support</li>
+</ul>
+
+<p><strong>Learning (Free):</strong></p>
+<ul>
+    <li>Harvard CS50 - Best intro to computer science</li>
+    <li>The Odin Project - Web development fundamentals</li>
+    <li>Search "vibe coding" on YouTube - See real examples</li>
+</ul>
+
+<p><strong>Communities:</strong></p>
+<ul>
+    <li>r/ClaudeAI on Reddit</li>
+    <li>Search #ClaudeCode on X/Twitter</li>
+</ul>
+
+<p class="footer">Last updated: January 2026. If something's outdated, the beauty of local files is you can just... edit it.</p>
+
+</div><!-- end main-content -->
+
+<!-- Reading Progress Bar -->
+<div id="reading-progress"></div>
+
+<!-- Floating Action Buttons -->
+<div id="floating-actions">
+    <button id="toc-toggle" class="fab" aria-label="Toggle sidebar" title="Toggle Sidebar (T)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+    <button id="back-to-top" class="fab fab-secondary" aria-label="Back to top" title="Back to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+    <button id="help-button" class="fab fab-help" aria-label="Keyboard shortcuts" title="Keyboard Shortcuts (⌘/)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+    </button>
+    <button id="search-button" class="fab fab-search" aria-label="Search document" title="Search Document (⌘K)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+        </svg>
+    </button>
+</div>
+
+<!-- TOC Backdrop -->
+<div class="toc-backdrop"></div>
+
+<!-- TOC Panel -->
+<div id="toc-panel" class="toc-hidden">
+    <div class="toc-content">
+        <div class="toc-header">
+            <h3>Contents</h3>
+            <button id="toc-close" aria-label="Close table of contents">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="toc-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="toc-filter" placeholder="Search sections..." aria-label="Filter sections">
+        </div>
+        <nav id="toc-nav" aria-label="Table of contents navigation">
+            <!-- TOC will be generated here -->
+        </nav>
+    </div>
+    <div id="resize-handle" title="Drag to resize"></div>
+</div>
+
+<!-- Width indicator (shown during resize) -->
+<div id="width-indicator"></div>
+
+<!-- Keyboard Shortcuts Help Modal -->
+<div id="shortcuts-modal" class="modal-hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>⌨️ Keyboard Shortcuts</h3>
+            <button id="shortcuts-close" aria-label="Close shortcuts help">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="shortcut-section">
+                <h4>Navigation</h4>
+                <div class="shortcut-item">
+                    <kbd>T</kbd>
+                    <span>Toggle sidebar</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>Esc</kbd>
+                    <span>Close sidebar / Close this dialog</span>
+                </div>
+            </div>
+
+            <div class="shortcut-section">
+                <h4>Search & Help</h4>
+                <div class="shortcut-item">
+                    <kbd>⌘</kbd> + <kbd>K</kbd>
+                    <span>Search document</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>⌘</kbd> + <kbd>/</kbd>
+                    <span>Show keyboard shortcuts</span>
+                </div>
+            </div>
+
+            <div class="shortcut-section">
+                <h4>Sidebar Features</h4>
+                <div class="shortcut-item">
+                    <div class="shortcut-desc">
+                        <strong>Resize sidebar:</strong> Drag the right edge
+                    </div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-desc">
+                        <strong>Search sections:</strong> Use the search box in sidebar
+                    </div>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-desc">
+                        <strong>Expand/collapse:</strong> Click arrows next to section names
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p>Press <kbd>Esc</kbd> or click outside to close</p>
+        </div>
+    </div>
+</div>
+
+<!-- Search Modal -->
+<div id="search-modal" class="modal-hidden">
+    <div class="search-backdrop"></div>
+    <div class="search-content">
+        <div class="search-input-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="search-input" placeholder="Search document..." aria-label="Search document">
+            <button id="search-close" aria-label="Close search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div id="search-results" class="search-results">
+            <div class="search-empty">
+                <p>Type to search through the document</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Reading Progress Bar */
+#reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-coral), var(--accent-teal));
+    z-index: 1000;
+}
+
+/* Floating Action Buttons */
+#floating-actions {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999;
+}
+
+.fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent-coral);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.fab:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.fab-secondary {
+    background: var(--bg-secondary);
+    width: 48px;
+    height: 48px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.fab-secondary.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.fab-help {
+    background: var(--bg-secondary);
+    width: 48px;
+    height: 48px;
+}
+
+.fab-search {
+    background: var(--bg-secondary);
+    width: 48px;
+    height: 48px;
+}
+
+/* TOC Sidebar - Always visible on left */
+#toc-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--toc-width, 320px);
+    z-index: 900;
+    background: linear-gradient(180deg, rgba(52, 52, 52, 0.98), rgba(43, 43, 43, 0.96));
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    min-width: 240px;
+    max-width: 600px;
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.35);
+}
+
+body.toc-hidden #toc-panel {
+    transform: translateX(-100%);
+}
+
+body.toc-hidden .main-content {
+    margin-left: 0 !important;
+}
+
+/* Width indicator when resizing */
+#width-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-code);
+    color: var(--text-primary);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 2000;
+}
+
+#width-indicator.visible {
+    opacity: 1;
+}
+
+/* Keyboard Shortcuts Modal */
+#shortcuts-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#shortcuts-modal.modal-hidden {
+    display: none;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.375rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+#shortcuts-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#shortcuts-close:hover {
+    background: var(--bg-code);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 28px;
+}
+
+.shortcut-section {
+    margin-bottom: 32px;
+}
+
+.shortcut-section:last-child {
+    margin-bottom: 0;
+}
+
+.shortcut-section h4 {
+    margin: 0 0 16px 0;
+    font-size: 1rem;
+    color: var(--accent-coral);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8125rem;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.shortcut-item:last-child {
+    border-bottom: none;
+}
+
+.shortcut-item kbd {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    box-shadow: 0 2px 0 var(--border);
+    min-width: 40px;
+    text-align: center;
+}
+
+.shortcut-item span {
+    flex: 1;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.shortcut-desc {
+    flex: 1;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.shortcut-desc strong {
+    color: var(--text-primary);
+}
+
+.modal-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-code);
+    border-radius: 0 0 16px 16px;
+}
+
+.modal-footer p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.modal-footer kbd {
+    display: inline-block;
+    padding: 4px 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text-primary);
+}
+
+/* Custom scrollbar for modal */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Search Modal */
+#search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+}
+
+#search-modal.modal-hidden {
+    display: none;
+}
+
+.search-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+}
+
+.search-content {
+    position: relative;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 70vh;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+}
+
+.search-input-wrapper svg:first-child {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+#search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    outline: none;
+}
+
+#search-input::placeholder {
+    color: var(--text-muted);
+}
+
+#search-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#search-close:hover {
+    background: var(--bg-code);
+    color: var(--text-primary);
+}
+
+.search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+
+.search-empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.search-result-item {
+    padding: 16px 24px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover,
+.search-result-item.selected {
+    background: var(--bg-code);
+}
+
+.search-result-item.selected {
+    outline: 2px solid var(--accent-coral);
+    outline-offset: -2px;
+}
+
+.search-result-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.search-result-section {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent-coral);
+}
+
+.search-result-breadcrumb {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.search-result-context {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.search-result-context mark {
+    background: var(--accent-coral);
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.search-no-results {
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.search-no-results p {
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.search-no-results .search-query {
+    color: var(--accent-coral);
+    font-weight: 600;
+}
+
+/* Custom scrollbar for search results */
+.search-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Highlight matched text in document */
+.search-highlight {
+    background: var(--accent-coral);
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Temporary highlight when jumping to search result */
+.search-highlight-temp {
+    animation: highlight-pulse 2s ease-out;
+}
+
+@keyframes highlight-pulse {
+    0% {
+        background: var(--accent-coral);
+        box-shadow: 0 0 0 0 var(--accent-coral);
+    }
+    50% {
+        background: var(--accent-coral);
+        box-shadow: 0 0 0 8px transparent;
+    }
+    100% {
+        background: transparent;
+        box-shadow: 0 0 0 0 transparent;
+    }
+}
+
+/* Resize Handle */
+#resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: col-resize;
+    background: transparent;
+    z-index: 901;
+}
+
+#resize-handle:hover,
+#resize-handle.resizing {
+    background: var(--accent-coral);
+}
+
+#resize-handle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 40px;
+    background: var(--border);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+#resize-handle:hover::after {
+    opacity: 1;
+}
+
+.toc-backdrop {
+    display: none;
+}
+
+.toc-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.toc-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #fff;
+    font-weight: 600;
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+}
+
+#toc-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    display: none; /* Hidden on desktop */
+    align-items: center;
+    justify-content: center;
+}
+
+#toc-close:hover {
+    background: var(--bg-code);
+    color: var(--text-primary);
+}
+
+/* Show close button on mobile */
+@media (max-width: 1024px) {
+    #toc-close {
+        display: flex;
+    }
+}
+
+.toc-search {
+    position: relative;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.toc-search svg {
+    position: absolute;
+    left: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+#toc-filter {
+    width: 100%;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px 10px 36px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+}
+
+#toc-filter:focus {
+    outline: none;
+    border-color: var(--accent-coral);
+}
+
+#toc-filter::placeholder {
+    color: var(--text-muted);
+}
+
+#toc-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 0;
+}
+
+/* Custom scrollbar for TOC */
+#toc-nav::-webkit-scrollbar {
+    width: 8px;
+}
+
+#toc-nav::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+#toc-nav::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+#toc-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* TOC Items */
+.toc-section {
+    margin: 0;
+}
+
+.toc-h2 {
+    margin: 0;
+}
+
+.toc-h2 > a {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.toc-h2 > a:hover {
+    background: var(--bg-code);
+    color: #fff;
+    border-left-color: var(--accent-coral);
+}
+
+.toc-h2 > a.active {
+    background: var(--accent-coral);
+    color: #fff;
+    border-left-color: var(--accent-coral);
+    font-weight: 600;
+    position: relative;
+}
+
+.toc-h2 > a.active::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid #fff;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+}
+
+.toc-h2.has-children > a {
+    padding-right: 40px;
+    position: relative;
+}
+
+.toc-toggle {
+    position: absolute;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toc-h2.expanded .toc-toggle {
+    transform: rotate(90deg);
+}
+
+.toc-h3-list {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: var(--bg-primary);
+}
+
+.toc-h2.expanded + .toc-h3-list {
+    display: block;
+}
+
+.toc-h3 {
+    margin: 0;
+}
+
+.toc-h3 a {
+    display: block;
+    padding: 8px 20px 8px 40px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.toc-h3 a:hover {
+    background: var(--bg-code);
+    color: var(--text-primary);
+    border-left-color: var(--accent-teal);
+}
+
+.toc-h3 a.active {
+    background: var(--accent-teal);
+    color: #fff;
+    border-left-color: var(--accent-teal);
+    font-weight: 600;
+}
+
+/* Hidden state for filtered items */
+.toc-section.hidden {
+    display: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+    #toc-panel {
+        transform: translateX(-100%);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+        z-index: 1001;
+    }
+
+    body:not(.toc-hidden) #toc-panel {
+        transform: translateX(0);
+    }
+
+    body:not(.toc-hidden) .main-content {
+        margin-left: 0;
+    }
+
+    /* Add backdrop on mobile */
+    body:not(.toc-hidden) .toc-backdrop {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+    }
+
+    #floating-actions {
+        bottom: 24px;
+        right: 24px;
+    }
+
+    .fab {
+        width: 48px;
+        height: 48px;
+    }
+
+    #toc-toggle {
+        display: flex !important;
+    }
+}
+
+/* Show TOC toggle on all screen sizes */
+#toc-toggle {
+    display: flex;
+}
+</style>
+
+<script>
+// TOC System
+(function() {
+    'use strict';
+
+    // Elements
+    const tocToggle = document.getElementById('toc-toggle');
+    const tocPanel = document.getElementById('toc-panel');
+    const tocClose = document.getElementById('toc-close');
+    const tocBackdrop = document.querySelector('.toc-backdrop');
+    const tocNav = document.getElementById('toc-nav');
+    const tocFilter = document.getElementById('toc-filter');
+    const backToTop = document.getElementById('back-to-top');
+    const helpButton = document.getElementById('help-button');
+    const readingProgress = document.getElementById('reading-progress');
+    const resizeHandle = document.getElementById('resize-handle');
+    const widthIndicator = document.getElementById('width-indicator');
+    const mainContent = document.querySelector('.main-content');
+    const shortcutsModal = document.getElementById('shortcuts-modal');
+    const shortcutsClose = document.getElementById('shortcuts-close');
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    const searchButton = document.getElementById('search-button');
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('search-input');
+    const searchClose = document.getElementById('search-close');
+    const searchResults = document.getElementById('search-results');
+    const searchBackdrop = document.querySelector('.search-backdrop');
+
+    // Resize state
+    let isResizing = false;
+    let currentWidth = parseInt(localStorage.getItem('tocWidth')) || 320;
+
+    // Set initial width
+    document.documentElement.style.setProperty('--toc-width', `${currentWidth}px`);
+
+    // Resize functionality
+    function startResize(e) {
+        if (window.innerWidth <= 1024) return; // Disable resize on mobile
+        isResizing = true;
+        resizeHandle.classList.add('resizing');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        widthIndicator.textContent = `${currentWidth}px`;
+        widthIndicator.classList.add('visible');
+    }
+
+    function resize(e) {
+        if (!isResizing) return;
+
+        const newWidth = Math.min(Math.max(e.clientX, 240), 600);
+        currentWidth = newWidth;
+
+        document.documentElement.style.setProperty('--toc-width', `${newWidth}px`);
+        widthIndicator.textContent = `${newWidth}px`;
+    }
+
+    function stopResize() {
+        if (!isResizing) return;
+
+        isResizing = false;
+        resizeHandle.classList.remove('resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        widthIndicator.classList.remove('visible');
+
+        // Save to localStorage
+        localStorage.setItem('tocWidth', currentWidth);
+    }
+
+    // Attach resize events
+    resizeHandle.addEventListener('mousedown', startResize);
+    document.addEventListener('mousemove', resize);
+    document.addEventListener('mouseup', stopResize);
+
+    // Generate TOC from headings
+    function generateTOC() {
+        const headings = mainContent
+            ? mainContent.querySelectorAll('h2, h3')
+            : document.querySelectorAll('h2, h3');
+        const toc = [];
+        let currentSection = null;
+
+        headings.forEach(heading => {
+            const level = heading.tagName.toLowerCase();
+            const text = heading.textContent.trim();
+            const id = heading.id || text.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-');
+
+            // Add ID if missing
+            if (!heading.id) {
+                heading.id = id;
+            }
+
+            if (level === 'h2') {
+                currentSection = {
+                    id: id,
+                    text: text,
+                    element: heading,
+                    children: []
+                };
+                toc.push(currentSection);
+            } else if (level === 'h3' && currentSection) {
+                currentSection.children.push({
+                    id: id,
+                    text: text,
+                    element: heading
+                });
+            }
+        });
+
+        return toc;
+    }
+
+    // Render TOC
+    function renderTOC(tocData, filterText = '') {
+        const filter = filterText.toLowerCase();
+        let html = '';
+
+        tocData.forEach(section => {
+            const sectionMatches = section.text.toLowerCase().includes(filter);
+            const childMatches = section.children.some(child =>
+                child.text.toLowerCase().includes(filter)
+            );
+            const hasChildren = section.children.length > 0;
+
+            if (!filterText || sectionMatches || childMatches) {
+                const hiddenClass = filterText && !sectionMatches && !childMatches ? 'hidden' : '';
+                const expandedClass = filterText && childMatches ? 'expanded' : '';
+
+                html += `<div class="toc-section ${hiddenClass}">`;
+                html += `<div class="toc-h2 ${hasChildren ? 'has-children' : ''} ${expandedClass}">`;
+                html += `<a href="#${section.id}" data-id="${section.id}">${section.text}</a>`;
+
+                if (hasChildren) {
+                    html += `<button class="toc-toggle" aria-label="Toggle subsections">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>`;
+                }
+
+                html += `</div>`;
+
+                if (hasChildren) {
+                    html += `<ul class="toc-h3-list">`;
+                    section.children.forEach(child => {
+                        const childHidden = filterText && !child.text.toLowerCase().includes(filter) ? 'hidden' : '';
+                        html += `<li class="toc-h3 ${childHidden}">
+                            <a href="#${child.id}" data-id="${child.id}">${child.text}</a>
+                        </li>`;
+                    });
+                    html += `</ul>`;
+                }
+
+                html += `</div>`;
+            }
+        });
+
+        tocNav.innerHTML = html;
+        attachTOCEvents();
+    }
+
+    // Attach events to TOC items
+    function attachTOCEvents() {
+        // Section links
+        tocNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-id');
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    // Instant jump - no smooth scrolling
+                    targetElement.scrollIntoView({ block: 'start' });
+
+                    // Close TOC on mobile only
+                    if (window.innerWidth <= 1024) {
+                        closeTOC();
+                    }
+
+                    // Update URL without jumping
+                    history.pushState(null, null, `#${targetId}`);
+                }
+            });
+        });
+
+        // Toggle buttons
+        tocNav.querySelectorAll('.toc-toggle').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const section = button.closest('.toc-h2');
+                section.classList.toggle('expanded');
+            });
+        });
+    }
+
+    // Track current active section
+    let currentActiveId = null;
+
+    // Highlight current section based on scroll
+    function updateActiveSection() {
+        // If no headings are visible, keep the last active one (don't blank out)
+        if (visibleHeadings.size === 0) return;
+
+        // Get all visible heading IDs as an array, sorted by their position in the document
+        const allHeadings = Array.from(mainContent
+            ? mainContent.querySelectorAll('h2[id], h3[id]')
+            : document.querySelectorAll('h2[id], h3[id]'));
+        const visibleIds = Array.from(visibleHeadings);
+
+        // Sort visible headings by their document order
+        visibleIds.sort((a, b) => {
+            const indexA = allHeadings.findIndex(h => h.id === a);
+            const indexB = allHeadings.findIndex(h => h.id === b);
+            return indexA - indexB;
+        });
+
+        // Use the first visible heading (topmost on screen)
+        const newActiveId = visibleIds[0];
+
+        // Only update if the active section changed (prevents flickering)
+        if (newActiveId && newActiveId !== currentActiveId) {
+            currentActiveId = newActiveId;
+
+            // Remove all active classes
+            tocNav.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+
+            // Add active class to current section
+            const activeLink = tocNav.querySelector(`a[data-id="${currentActiveId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+
+                const parentSection = activeLink.closest('.toc-section');
+                if (activeLink.closest('.toc-h3') && parentSection) {
+                    const parentHeader = parentSection.querySelector('.toc-h2');
+                    const parentLink = parentHeader ? parentHeader.querySelector('a') : null;
+                    if (parentHeader) {
+                        parentHeader.classList.add('expanded');
+                    }
+                    if (parentLink) {
+                        parentLink.classList.add('active');
+                    }
+                }
+
+                // Scroll the TOC to keep active item visible
+                activeLink.scrollIntoView({ block: 'nearest' });
+            }
+        }
+    }
+
+    // Simpler approach: use scroll events with getBoundingClientRect
+    function updateActiveSection() {
+        const headings = Array.from(mainContent
+            ? mainContent.querySelectorAll('h2[id], h3[id]')
+            : document.querySelectorAll('h2[id], h3[id]'));
+        if (headings.length === 0) return;
+
+        // Scroll-spy: keep h2 active until the reader is clearly into h3 content.
+        const activationOffset = 80;
+        let newActiveId = null;
+        let nextBelowTop = null;
+        let nextBelowTopOffset = Infinity;
+
+        // Pick the last heading above the activation line, or the first below it.
+        headings.forEach(heading => {
+            const rectTop = heading.getBoundingClientRect().top;
+            if (rectTop <= activationOffset) {
+                newActiveId = heading.id;
+                return;
+            }
+            if (rectTop > activationOffset && rectTop < nextBelowTopOffset) {
+                nextBelowTop = heading;
+                nextBelowTopOffset = rectTop;
+            }
+        });
+
+        if (!newActiveId && nextBelowTop) {
+            newActiveId = nextBelowTop.id;
+        }
+
+        // Fallback to first heading if none found
+        if (!newActiveId) {
+            newActiveId = headings[0].id;
+        }
+
+        // Only update if changed
+        if (newActiveId !== currentActiveId) {
+            currentActiveId = newActiveId;
+            // Expose current active ID for Playwright regression tests.
+            window.__tocActiveId = currentActiveId;
+
+            // Remove all active classes
+            tocNav.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+
+            // Add active class to current section
+            const activeLink = tocNav.querySelector(`a[data-id="${currentActiveId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+
+                // If it's an h3, expand its parent h2 section
+                const parentSection = activeLink.closest('.toc-section');
+                if (activeLink.closest('.toc-h3') && parentSection) {
+                    const parentHeader = parentSection.querySelector('.toc-h2');
+                    const parentLink = parentHeader ? parentHeader.querySelector('a') : null;
+                    if (parentHeader) {
+                        parentHeader.classList.add('expanded');
+                    }
+                    if (parentLink) {
+                        // Keep the h2 highlighted so the sidebar doesn't look "empty" on h3s.
+                        parentLink.classList.add('active');
+                    }
+                }
+
+                // Scroll the TOC to keep active item visible
+                activeLink.scrollIntoView({ block: 'nearest' });
+            }
+        }
+    }
+
+    // Expose updater for Playwright regression tests.
+    window.__updateActiveSection = updateActiveSection;
+
+    // Update reading progress
+    function updateProgress() {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrolled = window.scrollY;
+        const progress = (scrolled / documentHeight) * 100;
+
+        readingProgress.style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    // Show/hide back to top button
+    function updateBackToTop() {
+        if (window.scrollY > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    }
+
+    // Open TOC
+    function openTOC() {
+        document.body.classList.remove('toc-hidden');
+        // Only prevent body scroll on mobile
+        if (window.innerWidth <= 1024) {
+            document.body.style.overflow = 'hidden';
+        }
+        localStorage.setItem('tocOpen', 'true');
+    }
+
+    // Close TOC
+    function closeTOC() {
+        document.body.classList.add('toc-hidden');
+        document.body.style.overflow = '';
+        localStorage.setItem('tocOpen', 'false');
+    }
+
+    // Toggle TOC
+    function toggleTOC() {
+        if (document.body.classList.contains('toc-hidden')) {
+            openTOC();
+        } else {
+            closeTOC();
+        }
+    }
+
+    // Filter TOC
+    function filterTOC() {
+        const filterText = tocFilter.value;
+        const tocData = generateTOC();
+        renderTOC(tocData, filterText);
+
+        // Auto-expand sections when filtering
+        if (filterText) {
+            tocNav.querySelectorAll('.toc-h2.has-children').forEach(section => {
+                const hasVisibleChildren = section.querySelector('.toc-h3:not(.hidden)');
+                if (hasVisibleChildren) {
+                    section.classList.add('expanded');
+                }
+            });
+        }
+    }
+
+    // Shortcuts modal functions
+    function openShortcutsModal() {
+        shortcutsModal.classList.remove('modal-hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeShortcutsModal() {
+        shortcutsModal.classList.add('modal-hidden');
+        document.body.style.overflow = '';
+    }
+
+    // Search modal functions
+    function openSearchModal() {
+        searchModal.classList.remove('modal-hidden');
+        document.body.style.overflow = 'hidden';
+        searchInput.value = '';
+        searchInput.focus();
+        showEmptyState();
+    }
+
+    function closeSearchModal() {
+        searchModal.classList.add('modal-hidden');
+        document.body.style.overflow = '';
+        clearSearchHighlights();
+    }
+
+    function showEmptyState() {
+        searchResults.innerHTML = `
+            <div class="search-empty">
+                <p>Type to search through the document</p>
+            </div>
+        `;
+    }
+
+    function clearSearchHighlights() {
+        document.querySelectorAll('.search-highlight').forEach(el => {
+            const parent = el.parentNode;
+            parent.replaceChild(document.createTextNode(el.textContent), el);
+            parent.normalize();
+        });
+    }
+
+    // Search state
+    let searchResultsData = [];
+    let selectedSearchIndex = -1;
+
+    // Search functionality
+    function performSearch(query) {
+        if (!query.trim()) {
+            showEmptyState();
+            searchResultsData = [];
+            selectedSearchIndex = -1;
+            return;
+        }
+
+        const results = [];
+        const searchableElements = mainContent.querySelectorAll('h2, h3, p, li, td');
+        const searchLower = query.toLowerCase();
+
+        searchableElements.forEach(element => {
+            const text = element.textContent;
+            const textLower = text.toLowerCase();
+            const index = textLower.indexOf(searchLower);
+
+            if (index !== -1) {
+                // Found a match
+                const section = findParentSection(element);
+                const contextStart = Math.max(0, index - 50);
+                const contextEnd = Math.min(text.length, index + query.length + 50);
+                let context = text.substring(contextStart, contextEnd);
+
+                // Add ellipsis if needed
+                if (contextStart > 0) context = '...' + context;
+                if (contextEnd < text.length) context = context + '...';
+
+                // Highlight the match
+                const matchStart = context.toLowerCase().indexOf(searchLower);
+                if (matchStart !== -1) {
+                    const before = context.substring(0, matchStart);
+                    const match = context.substring(matchStart, matchStart + query.length);
+                    const after = context.substring(matchStart + query.length);
+                    context = before + '<mark>' + match + '</mark>' + after;
+                }
+
+                results.push({
+                    element,
+                    section,
+                    context,
+                    text
+                });
+            }
+        });
+
+        displaySearchResults(results, query);
+    }
+
+    function findParentSection(element) {
+        let current = element;
+        while (current && current !== mainContent) {
+            if (current.tagName === 'H2') {
+                return current.textContent.trim();
+            }
+            current = current.previousElementSibling || current.parentElement;
+        }
+        return 'Document';
+    }
+
+    function displaySearchResults(results, query) {
+        searchResultsData = results;
+        selectedSearchIndex = results.length > 0 ? 0 : -1;
+
+        if (results.length === 0) {
+            searchResults.innerHTML = `
+                <div class="search-no-results">
+                    <p>No results found for <span class="search-query">"${escapeHtml(query)}"</span></p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        results.forEach((result, index) => {
+            const selectedClass = index === selectedSearchIndex ? 'selected' : '';
+            html += `
+                <div class="search-result-item ${selectedClass}" data-index="${index}">
+                    <div class="search-result-header">
+                        <span class="search-result-section">${escapeHtml(result.section)}</span>
+                    </div>
+                    <div class="search-result-context">${result.context}</div>
+                </div>
+            `;
+        });
+
+        searchResults.innerHTML = html;
+
+        // Attach click and hover handlers
+        searchResults.querySelectorAll('.search-result-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                jumpToResult(results[index]);
+            });
+            item.addEventListener('mouseenter', () => {
+                updateSelectedSearchResult(index);
+            });
+        });
+    }
+
+    function updateSelectedSearchResult(newIndex) {
+        if (newIndex < 0 || newIndex >= searchResultsData.length) return;
+
+        selectedSearchIndex = newIndex;
+
+        // Update visual selection
+        searchResults.querySelectorAll('.search-result-item').forEach((item, index) => {
+            if (index === selectedSearchIndex) {
+                item.classList.add('selected');
+                // Scroll into view if needed (instant for keyboard nav)
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+    }
+
+    function handleSearchKeydown(e) {
+        if (searchResultsData.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            const newIndex = Math.min(selectedSearchIndex + 1, searchResultsData.length - 1);
+            updateSelectedSearchResult(newIndex);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            const newIndex = Math.max(selectedSearchIndex - 1, 0);
+            updateSelectedSearchResult(newIndex);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedSearchIndex >= 0 && selectedSearchIndex < searchResultsData.length) {
+                jumpToResult(searchResultsData[selectedSearchIndex]);
+            }
+        }
+    }
+
+    function jumpToResult(result) {
+        closeSearchModal();
+
+        // Scroll to element
+        result.element.scrollIntoView({ block: 'center' });
+
+        // Highlight the element temporarily
+        result.element.classList.add('search-highlight-temp');
+        setTimeout(() => {
+            result.element.classList.remove('search-highlight-temp');
+        }, 2000);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Debounce search input
+    let searchTimeout;
+    function handleSearchInput() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch(searchInput.value);
+        }, 150);
+    }
+
+    // Initialize
+    function init() {
+        const tocData = generateTOC();
+        renderTOC(tocData);
+
+        // Event listeners
+        tocToggle.addEventListener('click', toggleTOC);
+        tocClose.addEventListener('click', closeTOC);
+        tocBackdrop.addEventListener('click', closeTOC);
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0 });
+        });
+
+        helpButton.addEventListener('click', openShortcutsModal);
+        searchButton.addEventListener('click', openSearchModal);
+
+        tocFilter.addEventListener('input', filterTOC);
+
+        // Shortcuts modal listeners
+        shortcutsClose.addEventListener('click', closeShortcutsModal);
+        modalBackdrop.addEventListener('click', closeShortcutsModal);
+
+        // Search modal listeners
+        searchClose.addEventListener('click', closeSearchModal);
+        searchBackdrop.addEventListener('click', closeSearchModal);
+        searchInput.addEventListener('input', handleSearchInput);
+        searchInput.addEventListener('keydown', handleSearchKeydown);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Cmd+K to open search
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openSearchModal();
+                return;
+            }
+
+            // Cmd+/ to show shortcuts
+            if ((e.metaKey || e.ctrlKey) && e.key === '/') {
+                e.preventDefault();
+                openShortcutsModal();
+                return;
+            }
+
+            // T key to toggle TOC
+            if (e.key === 't' || e.key === 'T') {
+                if (document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    toggleTOC();
+                }
+            }
+
+            // Escape to close modals/TOC
+            if (e.key === 'Escape') {
+                if (!searchModal.classList.contains('modal-hidden')) {
+                    closeSearchModal();
+                } else if (!shortcutsModal.classList.contains('modal-hidden')) {
+                    closeShortcutsModal();
+                } else if (!document.body.classList.contains('toc-hidden') && window.innerWidth <= 1024) {
+                    closeTOC();
+                }
+            }
+        });
+
+        // Scroll events (throttled)
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) {
+                window.cancelAnimationFrame(scrollTimeout);
+            }
+            scrollTimeout = window.requestAnimationFrame(() => {
+                updateActiveSection();
+                updateProgress();
+                updateBackToTop();
+            });
+        });
+
+        // Initial updates
+        updateActiveSection();
+        updateProgress();
+        updateBackToTop();
+
+        // Set initial TOC state based on screen size
+        if (window.innerWidth <= 1024) {
+            // Start hidden on mobile
+            closeTOC();
+        } else {
+            // Start visible on desktop
+            openTOC();
+        }
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (window.innerWidth > 1024) {
+                    // Ensure TOC is visible on desktop
+                    openTOC();
+                } else {
+                    // Hide TOC on narrow screens
+                    closeTOC();
+                }
+            }, 250);
+        });
+    }
+
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
+
+</body>
+</html>
