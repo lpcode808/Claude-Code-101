@@ -492,6 +492,8 @@
     <li><a href="#key-terms">Key Terms Explained</a> - What does X mean?</li>
 </ul>
 
+<p><strong>Prefer a presentation view?</strong> Press <code>S</code> for slideshow mode (or click the monitor icon in the bottom-right). Use arrow keys to navigate.</p>
+
 <hr>
 
 <h2>🔑 Essential Terms (Read This First!)</h2>
@@ -2778,6 +2780,22 @@ base: <span class="string">'/projectname/'</span>
             </div>
 
             <div class="shortcut-section">
+                <h4>Slideshow Mode</h4>
+                <div class="shortcut-item">
+                    <kbd>S</kbd>
+                    <span>Toggle slideshow mode</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>←</kbd> <kbd>→</kbd>
+                    <span>Previous / Next slide</span>
+                </div>
+                <div class="shortcut-item">
+                    <kbd>Home</kbd> <kbd>End</kbd>
+                    <span>First / Last slide</span>
+                </div>
+            </div>
+
+            <div class="shortcut-section">
                 <h4>Search & Help</h4>
                 <div class="shortcut-item">
                     <kbd>⌘</kbd> + <kbd>K</kbd>
@@ -4859,25 +4877,16 @@ body.toc-hidden .main-content {
 
     function showFabHint() {
         // Only show on first visit
-        if (localStorage.getItem('fabHintDismissed')) {
-            console.log('FAB hint: Already dismissed');
-            return;
-        }
-
-        console.log('FAB hint: Scheduling to appear in 1.5s...');
+        if (localStorage.getItem('fabHintDismissed')) return;
 
         // Show hint after a short delay
         setTimeout(() => {
-            console.log('FAB hint: Attempting to show, element:', fabHint);
             if (fabHint) {
                 fabHint.classList.remove('fab-hint-hidden');
                 slideshowToggle?.classList.add('hint-pulse');
-                console.log('FAB hint: Should now be visible, classes:', fabHint.className);
 
                 // Auto-dismiss after 8 seconds
                 setTimeout(dismissFabHint, 8000);
-            } else {
-                console.error('FAB hint: Element not found!');
             }
         }, 1500);
     }

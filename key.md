@@ -1,5 +1,103 @@
 # Why Claude Code: Key Talking Points
 
+---
+
+## 🎯 Questions to Capture Your Voice (For Future Refinement)
+
+*These questions are designed to elicit your personal experiences, stories, and natural way of explaining Claude Code. They'll be asked via AskUserQuestion in future sessions to gradually make this document more authentically yours.*
+
+### Your Claude Code Journey
+
+1. **First Impressions**: What was the first "wow" moment you had with Claude Code? Walk me through what you were trying to do and what happened.
+
+2. **The Switch**: What were you using before Claude Code (ChatGPT, Copilot, etc.)? What specific frustration made you try something new?
+
+3. **Unexpected Discovery**: What feature or capability surprised you the most? Something you didn't expect it could do?
+
+4. **Daily Reality**: Describe a typical workflow now. How has your actual day-to-day development changed?
+
+5. **The Pain You Avoid**: What task do you absolutely NOT want to go back to doing the old way? What makes the thought of it painful now?
+
+### Local Files & Privacy (Talking Point 1)
+
+6. **The Files Epiphany**: When did it click for you that "local files" was fundamentally different than web chat? What were you doing at that moment?
+
+7. **Trust Building**: Were you nervous about giving AI access to your local files? What convinced you it was safe (or what still makes you cautious)?
+
+8. **Real Project Story**: Tell me about a project where local file access made a huge difference. What would have been impossible or annoying with copy-paste?
+
+9. **The Privacy Angle**: Have you worked on something sensitive/proprietary with Claude Code? How did you think through the privacy trade-offs?
+
+10. **For Non-Technical Friends**: How do you explain "local files vs cloud" to someone who isn't a developer? What analogy works for you?
+
+### Multiple Conversations & Model Switching (Talking Point 2)
+
+11. **Conversation Organization**: Show me your actual project folders. How do you organize conversations? Do you have naming conventions or patterns?
+
+12. **Model Switching Story**: Tell me about a time you switched models mid-conversation. What triggered the switch? Did it solve the problem?
+
+13. **Cost Awareness**: How conscious are you of costs when using Claude Code? Do you actively think "this is a Haiku task" vs "I need Opus for this"?
+
+14. **The Notebook Analogy**: The guide uses "multiple notebooks for same class" - does that resonate with you? What analogy would YOU use naturally?
+
+15. **Historical Value**: Have you gone back to old conversations? What were you looking for? Did it actually help?
+
+### Intelligent Context Management (Talking Point 3)
+
+16. **Watching Claude Explore**: Describe watching Claude search through your codebase for the first time. What did it feel like? What did you notice?
+
+17. **Bug Hunt Story**: Tell me about a bug Claude found by exploring files you didn't even know were relevant. Walk me through how it happened.
+
+18. **Large Codebase Experience**: Biggest project you've used Claude Code on? How many files? How did it handle the complexity?
+
+19. **The Magic Closet**: The guide uses "magic closet that sends you exactly what you need" - is that how it feels to you? What metaphor comes to mind?
+
+20. **vs Projects Feature**: Have you used Claude.ai Projects? How does that compare to Claude Code's on-demand retrieval in your actual experience?
+
+### Comparison & Differentiation
+
+21. **Cursor/Copilot Experience**: Have you used Cursor, Copilot, or other AI coding tools? What made you choose Claude Code or use it alongside them?
+
+22. **Terminal vs IDE**: Do you prefer terminal-based Claude Code or IDE integration? Why? What feels better about your choice?
+
+23. **The "Team Member" Claim**: The guide says "AI team member, not chat advisor" - does that ring true from your experience? Can you give an example that proves it?
+
+24. **What It Can't Do**: What has Claude Code failed at or disappointed you with? Where are the rough edges?
+
+25. **The Trade-Off You Accept**: What do you give up or deal with to use Claude Code? What annoyance is worth it?
+
+### Teaching & Explaining
+
+26. **Explaining to Beginners**: You're at a coffee shop, someone asks "what's Claude Code?" - what do you say in 30 seconds?
+
+27. **Skeptic Objection**: Someone says "I already use ChatGPT, why would I need this?" - what's your go-to response from real experience, not theory?
+
+28. **Educator Perspective**: You work in education tech. How do you think about Claude Code as a learning tool vs a productivity tool?
+
+29. **The Demo You Show**: If you had 5 minutes to show Claude Code to someone, what would you build or demonstrate? Why that example?
+
+30. **Who It's NOT For**: Based on your experience, who shouldn't use Claude Code? What type of person or project is better served by other tools?
+
+### Emotional & Philosophical
+
+31. **Dependency Concern**: Do you worry about becoming dependent on AI? How do you think about skill development vs using AI as a tool?
+
+32. **The Craft Question**: Does using Claude Code feel like "real coding" to you? How do you navigate that internally or explain it to others?
+
+33. **What You've Built**: What's the coolest thing you've built WITH Claude Code that you wouldn't have built WITHOUT it? Why wouldn't you have built it?
+
+34. **Future Vision**: Where do you think this is going? Not hype, but based on what you've actually experienced, what becomes possible?
+
+35. **Your Unique Insight**: What do you understand about Claude Code from using it that most people talking about it don't get yet?
+
+---
+
+*These questions will be asked gradually via AskUserQuestion to build out authentic, experience-based content. Answers will be incorporated to make talking points more personal and compelling.*
+
+---
+
+# Why Claude Code: Key Talking Points
+
 ## 1. Local File Access & Control
 
 **The Point**: Claude Code works directly with files on your computer, not through uploads or copy-paste.
