@@ -550,7 +550,7 @@
 
 <p><strong>What happened:</strong> Claude Code (Anthropic's AI coding tool) has "broken containment" into mainstream consciousness. Non-technical people are suddenly realizing they can build actual apps—and you might be one of them.</p>
 
-<p><strong>The big insight:</strong> With a Claude account, you can run <code>claude</code> in your terminal and build things locally - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but Claude Code availability and limits depend on your plan.</p>
+<p><strong>The big insight:</strong> With a paid Claude subscription (Pro/Max/Team/Enterprise) or an Anthropic Console account, you can run <code>claude</code> in your terminal and build things locally - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but Claude Code availability and limits depend on your plan.[foot]</p>
 
 <p><strong>Why this matters:</strong> The interface is just... conversation. You describe what you want, Claude builds it.</p>
 
@@ -775,9 +775,9 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <p><strong>The safety mechanisms in Claude Code:</strong></p>
 <ol>
     <li><strong>Git integration</strong> - Every change is tracked, reversible</li>
-    <li><strong>Working directory sandboxing</strong> - It only operates where you tell it</li>
-    <li><strong>Transparency</strong> - It shows you what it's doing before doing it</li>
-    <li><strong>You're in the loop</strong> - It asks permission for risky operations</li>
+    <li><strong>Working directory sandboxing</strong> - It operates in folders you allow.[foot]</li>
+    <li><strong>Transparency</strong> - It shows planned actions by default.[foot]</li>
+    <li><strong>Permissions & policies</strong> - Default modes prompt you; org admins can enable auto-accept/bypass.[foot]</li>
 </ol>
 
 <h3>The Future State</h3>
@@ -860,7 +860,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <p><strong>Iteration speed:</strong></p>
 <ul>
-    <li>Claude Code sees ALL your files at once</li>
+    <li>Claude Code can see all files in your current folder (and any directories you explicitly add).[foot]</li>
     <li>Can refactor across multiple files in one go</li>
     <li>Doesn't lose context when you close the browser</li>
     <li>Can run the code locally to test immediately</li>
@@ -1036,7 +1036,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <hr>
 
-<p><strong>Prefer clicking over typing?</strong> Download Claude Desktop from <a href="https://claude.com/download">claude.com/download</a> — same coding powers, visual interface.</p>
+<p><strong>Prefer clicking over typing?</strong> Download Claude Desktop from <a href="https://claude.com/download">claude.com/download</a> — visual interface, with Claude Code features available on eligible plans.[foot]</p>
 
 <hr>
 
@@ -1044,9 +1044,10 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <h3>Option 1: Claude Desktop (Visual App)</h3>
 <ul>
-    <li>Visual app on your Mac/Windows/Linux</li>
-    <li>Familiar chat interface with coding superpowers</li>
+    <li>Visual app on macOS and Windows.[foot]</li>
+    <li>Familiar chat interface; Claude Code features require eligible plans.[foot]</li>
     <li><strong>Current status:</strong> Check the Desktop app release notes for Claude Code availability</li>
+    <li><strong>Access note:</strong> Claude Code in Desktop is for Max/Pro/Team/Enterprise users.[foot]</li>
     <li><strong>Best for:</strong> People who want a visual interface without learning Terminal</li>
     <li><strong>Bonus:</strong> Can run multiple coding sessions in parallel</li>
 </ul>
@@ -1055,7 +1056,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <ul>
     <li>Terminal-based (that "hacker screen" thing—don't worry, it's friendlier than it looks)</li>
     <li>Type <code>claude</code> and get a conversational coding agent</li>
-    <li><strong>Current status:</strong> Live; access depends on your plan</li>
+    <li><strong>Current status:</strong> Live; access requires an eligible plan or Console account.[foot]</li>
     <li><strong>Best for:</strong> Anyone willing to learn basic terminal use</li>
     <li><strong>Key advantage:</strong> Your code lives on YOUR computer, not in the cloud</li>
 </ul>
@@ -1400,7 +1401,7 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
 
 <p><strong>Claude doesn't know:</strong></p>
 <ul>
-    <li>What's in other folders (unless you <code>cd</code> there)</li>
+    <li>What's in other folders (unless you <code>cd</code> there or explicitly add them).[foot]</li>
     <li>What happened in previous sessions (unless you remind it)</li>
     <li>What your browser shows (unless you describe it)</li>
 </ul>
@@ -1415,8 +1416,9 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
 <h3>Session Management</h3>
 
 <p><strong>Starting fresh:</strong></p>
-<pre><code><span class="comment"># Each time you run `claude`, it's a new session</span>
+<pre><code><span class="comment"># Start Claude Code</span>
 <span class="command">claude</span></code></pre>
+<p><strong>Note:</strong> By default, each run starts a new session unless you resume a cached one.[foot]</p>
 
 <p><strong>Claude remembers within a session:</strong></p>
 <ul>
@@ -1425,14 +1427,14 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
     <li>The context of the current project</li>
 </ul>
 
-<p><strong>Claude forgets between sessions:</strong></p>
+<p><strong>Claude doesn't remember across new sessions by default:</strong></p>
 <ul>
     <li>What you discussed yesterday</li>
     <li>Why you made certain choices</li>
     <li>The overall project goals</li>
 </ul>
 
-<p><strong>Solution:</strong> Recap when you return:</p>
+<p><strong>Solution:</strong> Resume a cached session when available (local cache can enable resuming for up to ~30 days), or recap when you return.[foot]</p>
 <pre><code>You: <span class="string">"I'm back working on the todo app. Last time we added dark mode.
       Today I want to add categories for grouping tasks."</span></code></pre>
 
@@ -1702,8 +1704,8 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
 
 <p><strong>Already have:</strong></p>
 <ul>
-    <li>✅ MacOS computer</li>
-    <li>✅ Claude account (Claude Code access depends on your plan)</li>
+    <li>✅ Computer with a supported OS (macOS 13+, Windows via WSL, or Linux on Ubuntu/Debian) [foot]</li>
+    <li>✅ Claude account with an eligible plan or Console account [foot]</li>
     <li>⚠️ <strong>CHECK THIS:</strong> Review <a href="https://claude.ai/settings/data-privacy-controls" target="_blank">claude.ai/settings/data-privacy-controls</a> and choose your data privacy setting</li>
 </ul>
 
@@ -1719,7 +1721,7 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
     </li>
 </ol>
 
-<p><strong>Alternative installation</strong> (if you prefer npm):</p>
+<p><strong>Alternative installation</strong> (deprecated npm method): [foot]</p>
 <ul>
     <li>First install Node.js from nodejs.org</li>
     <li>Then: <code>npm install -g @anthropic-ai/claude-code</code></li>
@@ -1877,7 +1879,7 @@ Changes applied! Refresh your browser to see the updates.</code></pre>
 <ul>
     <li>Can read/write files in current folder</li>
     <li>Can run terminal commands (like git, npm)</li>
-    <li>Can access up-to-date info from the web (when enabled)</li>
+    <li>Can access up-to-date info from the web via WebFetch/WebSearch (when enabled by permissions/org policy).[foot]</li>
     <li>Multi-turn conversations about your codebase</li>
 </ul>
 
@@ -1891,7 +1893,7 @@ Changes applied! Refresh your browser to see the updates.</code></pre>
 <ul>
     <li>Files on your computer = you control them</li>
     <li>No "platform lock-in"</li>
-    <li>Works offline (after initial generation)</li>
+    <li>Works offline for running your local app (after initial generation)</li>
 </ul>
 
 <p><strong>✅ GitHub workflow:</strong></p>
@@ -2269,16 +2271,16 @@ Can you recreate it locally?"</span>
     <li>Install packages (if you confirm)</li>
 </ul>
 
-<p><strong>What it CAN'T do (without you noticing):</strong></p>
+<p><strong>What it usually can't do (without your permissions or settings allowing it):</strong></p>
 <ul>
-    <li>Access files outside your project folder (unless you cd there)</li>
-    <li>Run commands without showing you</li>
-    <li>Install system-wide software (needs sudo password)</li>
+    <li>Access files outside your working directory unless you add them (and some paths may be blocked).[foot]</li>
+    <li>Run commands without your permission in default modes (admins can enable auto-accept/bypass).[foot]</li>
+    <li>Install system-wide software without sudo</li>
 </ul>
 
 <p><strong>Good habits:</strong></p>
 <ul>
-    <li>Review code before running it</li>
+    <li>Review code and commands before running them</li>
     <li>Use Git so you can undo mistakes</li>
     <li>Work in dedicated project folders</li>
 </ul>
@@ -2384,8 +2386,8 @@ Can you recreate it locally?"</span>
 
 <p><strong>Public or Private?</strong></p>
 <ul>
-    <li><strong>Public</strong> = Anyone can see it (required for free GitHub Pages)</li>
-    <li><strong>Private</strong> = Only you can see it (GitHub Pages costs money for private repos)</li>
+    <li><strong>Public</strong> = Anyone can see it (supported on free plans).[foot]</li>
+    <li><strong>Private</strong> = Only you can see it (GitHub Pages for private repos requires a paid plan).[foot]</li>
 </ul>
 
 <p><strong>IMPORTANT:</strong> Do NOT check these boxes:</p>
@@ -2555,7 +2557,7 @@ base: <span class="string">'/projectname/'</span>
     <li>Try basic commands: <code>pwd</code> (where am I?), <code>ls</code> (what's here?)</li>
     <li>Install Claude Code: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
     <li>Test it worked: <code>claude --version</code></li>
-    <li>If something feels broken: <code>claude doctor</code> (auto-diagnoses issues)</li>
+    <li>If something feels broken: <code>claude doctor</code> (installation health check).[foot]</li>
 </ul>
 
 <h3>Next Week</h3>
@@ -2633,7 +2635,7 @@ base: <span class="string">'/projectname/'</span>
 
 <p><strong>If Something Breaks:</strong></p>
 <ul>
-    <li>Run <code>claude doctor</code> - auto-diagnoses most issues</li>
+    <li>Run <code>claude doctor</code> - installation health check.[foot]</li>
     <li><a href="https://support.claude.com">Claude Help Center</a> - Official support</li>
 </ul>
 
@@ -2652,6 +2654,7 @@ base: <span class="string">'/projectname/'</span>
 
 <p class="footer">Want to improve this guide? The source lives on <a href="https://github.com/lpcode808/Claude-Code-101">GitHub</a> — feel free to fork it, open a PR, or file an issue. If it helped, consider starring the repo.</p>
 <p class="footer">Last updated: January 2026. If something's outdated, the beauty of local files is you can just... edit it.</p>
+<p class="footer">[foot1]</p>
 
 </div><!-- end main-content -->
 
