@@ -460,6 +460,100 @@
             color: var(--text-muted);
             font-size: 0.875rem;
         }
+
+        .footnote-ref a {
+            font-size: 0.75em;
+            vertical-align: super;
+            text-decoration: none;
+            color: var(--accent-teal);
+            padding: 0 6px;
+            border-radius: 999px;
+            background: rgba(92, 184, 178, 0.15);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .footnote-ref a:hover,
+        .footnote-ref a:focus {
+            background: rgba(92, 184, 178, 0.3);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .footnote-tooltip {
+            position: absolute;
+            max-width: 320px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+
+        .footnote-tooltip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footnote-tooltip::after {
+            content: '';
+            position: absolute;
+            left: 18px;
+            bottom: -12px;
+            border: 6px solid transparent;
+            border-top-color: var(--bg-secondary);
+        }
+
+        .footnote-tooltip.footnote-tooltip--below::after {
+            top: -12px;
+            bottom: auto;
+            border-top-color: transparent;
+            border-bottom-color: var(--bg-secondary);
+        }
+
+        .footnotes {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px dashed var(--border);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .footnotes-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-family: var(--font-display);
+            color: var(--text-primary);
+        }
+
+        .footnotes ol {
+            padding-left: 1.4rem;
+        }
+
+        .footnotes li {
+            margin-bottom: 0.6rem;
+        }
+
+        .footnotes a {
+            color: var(--link);
+        }
+
+        .footnote-backref {
+            margin-left: 0.4rem;
+            text-decoration: none;
+            color: var(--text-muted);
+        }
+
+        .footnote-backref:hover {
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
@@ -550,7 +644,7 @@
 
 <p><strong>What happened:</strong> Claude Code (Anthropic's AI coding tool) has "broken containment" into mainstream consciousness. Non-technical people are suddenly realizing they can build actual apps—and you might be one of them.</p>
 
-<p><strong>The big insight:</strong> With a paid Claude subscription (Pro/Max/Team/Enterprise) or an Anthropic Console account, you can run <code>claude</code> in your terminal and build things locally - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but Claude Code availability and limits depend on your plan.[foot]</p>
+<p><strong>The big insight:</strong> With a paid Claude subscription (Pro/Max/Team/Enterprise) or an Anthropic Console account, you can run <code>claude</code> in your terminal and build things locally - outputs live on your computer, not in some cloud sandbox. You still get claude.ai for chat, but Claude Code availability and limits depend on your plan.<sup class="footnote-ref"><a href="#fn1" id="fnref1" data-footnote="Claude Code access requires a paid plan or Console account (setup/authentication).">1</a></sup></p>
 
 <p><strong>Why this matters:</strong> The interface is just... conversation. You describe what you want, Claude builds it.</p>
 
@@ -775,9 +869,9 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <p><strong>The safety mechanisms in Claude Code:</strong></p>
 <ol>
     <li><strong>Git integration</strong> - Every change is tracked, reversible</li>
-    <li><strong>Working directory sandboxing</strong> - It operates in folders you allow.[foot]</li>
-    <li><strong>Transparency</strong> - It shows planned actions by default.[foot]</li>
-    <li><strong>Permissions & policies</strong> - Default modes prompt you; org admins can enable auto-accept/bypass.[foot]</li>
+    <li><strong>Working directory sandboxing</strong> - It operates in folders you allow.<sup class="footnote-ref"><a href="#fn2" id="fnref2" data-footnote="Claude Code file access is limited to allowed directories; you can add directories.">2</a></sup></li>
+    <li><strong>Transparency</strong> - It shows planned actions by default.</li>
+    <li><strong>Permissions & policies</strong> - Default modes prompt you; settings can enable auto-accept/bypass.<sup class="footnote-ref"><a href="#fn3" id="fnref3" data-footnote="Permission modes can be configured, including auto-accept/bypass.">3</a></sup></li>
 </ol>
 
 <h3>The Future State</h3>
@@ -860,7 +954,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <p><strong>Iteration speed:</strong></p>
 <ul>
-    <li>Claude Code can see all files in your current folder (and any directories you explicitly add).[foot]</li>
+    <li>Claude Code can see all files in your current folder (and any directories you explicitly add).<sup class="footnote-ref"><a href="#fn4" id="fnref4" data-footnote="Default access is the current directory plus any added directories.">4</a></sup></li>
     <li>Can refactor across multiple files in one go</li>
     <li>Doesn't lose context when you close the browser</li>
     <li>Can run the code locally to test immediately</li>
@@ -1036,7 +1130,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <hr>
 
-<p><strong>Prefer clicking over typing?</strong> Download Claude Desktop from <a href="https://claude.com/download">claude.com/download</a> — visual interface, with Claude Code features available on eligible plans.[foot]</p>
+<p><strong>Prefer clicking over typing?</strong> Download Claude Desktop from <a href="https://claude.com/download">claude.com/download</a> — visual interface, with Claude Code features available on eligible plans.<sup class="footnote-ref"><a href="#fn5" id="fnref5" data-footnote="Claude Desktop availability and plan eligibility.">5</a></sup></p>
 
 <hr>
 
@@ -1044,10 +1138,10 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 
 <h3>Option 1: Claude Desktop (Visual App)</h3>
 <ul>
-    <li>Visual app on macOS and Windows.[foot]</li>
-    <li>Familiar chat interface; Claude Code features require eligible plans.[foot]</li>
+    <li>Visual app on macOS and Windows.<sup class="footnote-ref"><a href="#fn6" id="fnref6" data-footnote="Desktop app downloads for macOS and Windows.">6</a></sup></li>
+    <li>Familiar chat interface; Claude Code features require eligible plans.<sup class="footnote-ref"><a href="#fn7" id="fnref7" data-footnote="Claude Code features in Desktop require eligible plans.">7</a></sup></li>
     <li><strong>Current status:</strong> Check the Desktop app release notes for Claude Code availability</li>
-    <li><strong>Access note:</strong> Claude Code in Desktop is for Max/Pro/Team/Enterprise users.[foot]</li>
+    <li><strong>Access note:</strong> Claude Code in Desktop is for Max/Pro/Team/Enterprise users.<sup class="footnote-ref"><a href="#fn8" id="fnref8" data-footnote="Claude Code in Desktop is for Max/Pro/Team/Enterprise users.">8</a></sup></li>
     <li><strong>Best for:</strong> People who want a visual interface without learning Terminal</li>
     <li><strong>Bonus:</strong> Can run multiple coding sessions in parallel</li>
 </ul>
@@ -1056,7 +1150,7 @@ Claude Code: <span class="comment">*updates netlify.toml*</span>
 <ul>
     <li>Terminal-based (that "hacker screen" thing—don't worry, it's friendlier than it looks)</li>
     <li>Type <code>claude</code> and get a conversational coding agent</li>
-    <li><strong>Current status:</strong> Live; access requires an eligible plan or Console account.[foot]</li>
+    <li><strong>Current status:</strong> Live; access requires an eligible plan or Console account.<sup class="footnote-ref"><a href="#fn9" id="fnref9" data-footnote="CLI access requires an eligible plan or Console account.">9</a></sup></li>
     <li><strong>Best for:</strong> Anyone willing to learn basic terminal use</li>
     <li><strong>Key advantage:</strong> Your code lives on YOUR computer, not in the cloud</li>
 </ul>
@@ -1401,7 +1495,7 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
 
 <p><strong>Claude doesn't know:</strong></p>
 <ul>
-    <li>What's in other folders (unless you <code>cd</code> there or explicitly add them).[foot]</li>
+    <li>What's in other folders (unless you <code>cd</code> there or explicitly add them).<sup class="footnote-ref"><a href="#fn10" id="fnref10" data-footnote="Access to other directories requires adding them.">10</a></sup></li>
     <li>What happened in previous sessions (unless you remind it)</li>
     <li>What your browser shows (unless you describe it)</li>
 </ul>
@@ -1416,9 +1510,8 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
 <h3>Session Management</h3>
 
 <p><strong>Starting fresh:</strong></p>
-<pre><code><span class="comment"># Start Claude Code</span>
+<pre><code><span class="comment"># Each time you run `claude`, it's a new session</span>
 <span class="command">claude</span></code></pre>
-<p><strong>Note:</strong> By default, each run starts a new session unless you resume a cached one.[foot]</p>
 
 <p><strong>Claude remembers within a session:</strong></p>
 <ul>
@@ -1434,7 +1527,7 @@ Claude: <span class="comment">*adds input field, implements filter logic*</span>
     <li>The overall project goals</li>
 </ul>
 
-<p><strong>Solution:</strong> Resume a cached session when available (local cache can enable resuming for up to ~30 days), or recap when you return.[foot]</p>
+<p><strong>Solution:</strong> Recap when you return:</p>
 <pre><code>You: <span class="string">"I'm back working on the todo app. Last time we added dark mode.
       Today I want to add categories for grouping tasks."</span></code></pre>
 
@@ -1704,8 +1797,8 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
 
 <p><strong>Already have:</strong></p>
 <ul>
-    <li>✅ Computer with a supported OS (macOS 13+, Windows via WSL, or Linux on Ubuntu/Debian) [foot]</li>
-    <li>✅ Claude account with an eligible plan or Console account [foot]</li>
+    <li>✅ Computer with a supported OS (macOS 13+, Windows via WSL, or Linux on Ubuntu/Debian) <sup class="footnote-ref"><a href="#fn11" id="fnref11" data-footnote="System requirements: macOS 13+, Windows via WSL, Ubuntu/Debian.">11</a></sup></li>
+    <li>✅ Claude account with an eligible plan or Console account <sup class="footnote-ref"><a href="#fn12" id="fnref12" data-footnote="Eligible plan or Console account required.">12</a></sup></li>
     <li>⚠️ <strong>CHECK THIS:</strong> Review <a href="https://claude.ai/settings/data-privacy-controls" target="_blank">claude.ai/settings/data-privacy-controls</a> and choose your data privacy setting</li>
 </ul>
 
@@ -1721,7 +1814,7 @@ Think of it like giving someone keys to ONE room in your house, not the whole ho
     </li>
 </ol>
 
-<p><strong>Alternative installation</strong> (deprecated npm method): [foot]</p>
+<p><strong>Alternative installation</strong> (deprecated npm method): <sup class="footnote-ref"><a href="#fn13" id="fnref13" data-footnote="npm install method is deprecated.">13</a></sup></p>
 <ul>
     <li>First install Node.js from nodejs.org</li>
     <li>Then: <code>npm install -g @anthropic-ai/claude-code</code></li>
@@ -1879,7 +1972,7 @@ Changes applied! Refresh your browser to see the updates.</code></pre>
 <ul>
     <li>Can read/write files in current folder</li>
     <li>Can run terminal commands (like git, npm)</li>
-    <li>Can access up-to-date info from the web via WebFetch/WebSearch (when enabled by permissions/org policy).[foot]</li>
+    <li>Can access up-to-date info from the web via WebFetch (when enabled by permissions/org policy).<sup class="footnote-ref"><a href="#fn14" id="fnref14" data-footnote="WebFetch tool access is controlled by permissions.">14</a></sup></li>
     <li>Multi-turn conversations about your codebase</li>
 </ul>
 
@@ -2273,8 +2366,8 @@ Can you recreate it locally?"</span>
 
 <p><strong>What it usually can't do (without your permissions or settings allowing it):</strong></p>
 <ul>
-    <li>Access files outside your working directory unless you add them (and some paths may be blocked).[foot]</li>
-    <li>Run commands without your permission in default modes (admins can enable auto-accept/bypass).[foot]</li>
+    <li>Access files outside your working directory unless you add them.<sup class="footnote-ref"><a href="#fn15" id="fnref15" data-footnote="Access outside the working directory requires adding directories.">15</a></sup></li>
+    <li>Run commands without your permission in default modes (admins can enable auto-accept/bypass).<sup class="footnote-ref"><a href="#fn16" id="fnref16" data-footnote="Permission modes include prompts and auto-accept/bypass.">16</a></sup></li>
     <li>Install system-wide software without sudo</li>
 </ul>
 
@@ -2386,8 +2479,8 @@ Can you recreate it locally?"</span>
 
 <p><strong>Public or Private?</strong></p>
 <ul>
-    <li><strong>Public</strong> = Anyone can see it (supported on free plans).[foot]</li>
-    <li><strong>Private</strong> = Only you can see it (GitHub Pages for private repos requires a paid plan).[foot]</li>
+    <li><strong>Public</strong> = Anyone can see it (supported on free plans).<sup class="footnote-ref"><a href="#fn17" id="fnref17" data-footnote="GitHub Pages for public repos is available on Free plans.">17</a></sup></li>
+    <li><strong>Private</strong> = Only you can see it (GitHub Pages for private repos requires a paid plan).<sup class="footnote-ref"><a href="#fn18" id="fnref18" data-footnote="GitHub Pages for private repos requires paid plans.">18</a></sup></li>
 </ul>
 
 <p><strong>IMPORTANT:</strong> Do NOT check these boxes:</p>
@@ -2557,7 +2650,7 @@ base: <span class="string">'/projectname/'</span>
     <li>Try basic commands: <code>pwd</code> (where am I?), <code>ls</code> (what's here?)</li>
     <li>Install Claude Code: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
     <li>Test it worked: <code>claude --version</code></li>
-    <li>If something feels broken: <code>claude doctor</code> (installation health check).[foot]</li>
+    <li>If something feels broken: <code>claude doctor</code> (installation health check).<sup class="footnote-ref"><a href="#fn19" id="fnref19" data-footnote="claude doctor is an installation health check.">19</a></sup></li>
 </ul>
 
 <h3>Next Week</h3>
@@ -2635,7 +2728,7 @@ base: <span class="string">'/projectname/'</span>
 
 <p><strong>If Something Breaks:</strong></p>
 <ul>
-    <li>Run <code>claude doctor</code> - installation health check.[foot]</li>
+    <li>Run <code>claude doctor</code> - installation health check.<sup class="footnote-ref"><a href="#fn20" id="fnref20" data-footnote="claude doctor is an installation health check.">20</a></sup></li>
     <li><a href="https://support.claude.com">Claude Help Center</a> - Official support</li>
 </ul>
 
@@ -2652,9 +2745,33 @@ base: <span class="string">'/projectname/'</span>
     <li>Search #ClaudeCode on X/Twitter</li>
 </ul>
 
+<section class="footnotes" id="footnotes">
+  <p class="footnotes-title">Footnotes</p>
+  <ol>
+    <li id="fn1">Claude Code access requires a paid plan or Console account. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref1" aria-label="Back to reference 1">↩</a></li>
+    <li id="fn2">File access is limited to your working directory unless you add directories. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref2" aria-label="Back to reference 2">↩</a></li>
+    <li id="fn3">Permission modes (including auto-accept/bypass) are configurable. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref3" aria-label="Back to reference 3">↩</a></li>
+    <li id="fn4">Default access includes the current directory plus any added directories. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref4" aria-label="Back to reference 4">↩</a></li>
+    <li id="fn5">Desktop app availability and plan eligibility. <a href="https://claude.com/product" target="_blank" rel="noopener">Claude product page</a>. <a class="footnote-backref" href="#fnref5" aria-label="Back to reference 5">↩</a></li>
+    <li id="fn6">Desktop app downloads for macOS and Windows. <a href="https://claude.com/download" target="_blank" rel="noopener">Claude Desktop download</a>. <a class="footnote-backref" href="#fnref6" aria-label="Back to reference 6">↩</a></li>
+    <li id="fn7">Claude Code features in Desktop require eligible plans. <a href="https://claude.com/product" target="_blank" rel="noopener">Claude product page</a>. <a class="footnote-backref" href="#fnref7" aria-label="Back to reference 7">↩</a></li>
+    <li id="fn8">Claude Code in Desktop is for Max/Pro/Team/Enterprise users. <a href="https://claude.com/product" target="_blank" rel="noopener">Claude product page</a>. <a class="footnote-backref" href="#fnref8" aria-label="Back to reference 8">↩</a></li>
+    <li id="fn9">CLI access requires an eligible plan or Console account. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref9" aria-label="Back to reference 9">↩</a></li>
+    <li id="fn10">Access to other directories requires adding them. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref10" aria-label="Back to reference 10">↩</a></li>
+    <li id="fn11">System requirements: macOS 13+, Windows via WSL, Ubuntu/Debian. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref11" aria-label="Back to reference 11">↩</a></li>
+    <li id="fn12">Eligible plan or Console account required. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref12" aria-label="Back to reference 12">↩</a></li>
+    <li id="fn13">npm install method is deprecated. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref13" aria-label="Back to reference 13">↩</a></li>
+    <li id="fn14">WebFetch tool access is controlled by permissions. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref14" aria-label="Back to reference 14">↩</a></li>
+    <li id="fn15">Access outside the working directory requires adding directories. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref15" aria-label="Back to reference 15">↩</a></li>
+    <li id="fn16">Permission modes include prompts and auto-accept/bypass. <a href="https://code.claude.com/docs/en/team" target="_blank" rel="noopener">Permissions & access</a>. <a class="footnote-backref" href="#fnref16" aria-label="Back to reference 16">↩</a></li>
+    <li id="fn17">GitHub Pages for public repos is available on Free plans. <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#usage-limits" target="_blank" rel="noopener">GitHub Pages usage limits</a>. <a class="footnote-backref" href="#fnref17" aria-label="Back to reference 17">↩</a></li>
+    <li id="fn18">GitHub Pages for private repos requires paid plans. <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#usage-limits" target="_blank" rel="noopener">GitHub Pages usage limits</a>. <a class="footnote-backref" href="#fnref18" aria-label="Back to reference 18">↩</a></li>
+    <li id="fn19">claude doctor is an installation health check. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref19" aria-label="Back to reference 19">↩</a></li>
+    <li id="fn20">claude doctor is an installation health check. <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a>. <a class="footnote-backref" href="#fnref20" aria-label="Back to reference 20">↩</a></li>
+  </ol>
+</section>
 <p class="footer">Want to improve this guide? The source lives on <a href="https://github.com/lpcode808/Claude-Code-101">GitHub</a> — feel free to fork it, open a PR, or file an issue. If it helped, consider starring the repo.</p>
 <p class="footer">Last updated: January 2026. If something's outdated, the beauty of local files is you can just... edit it.</p>
-<p class="footer">[foot1]</p>
 
 </div><!-- end main-content -->
 
@@ -4639,6 +4756,82 @@ body.toc-hidden .main-content {
         });
     }
 
+    function initFootnotes() {
+        const refs = document.querySelectorAll('.footnote-ref a[data-footnote]');
+        if (!refs.length) return;
+
+        const tooltip = document.createElement('div');
+        tooltip.className = 'footnote-tooltip';
+        tooltip.setAttribute('role', 'tooltip');
+        tooltip.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(tooltip);
+
+        let activeRef = null;
+
+        function positionTooltip(ref) {
+            const rect = ref.getBoundingClientRect();
+            const scrollY = window.scrollY || window.pageYOffset;
+            const scrollX = window.scrollX || window.pageXOffset;
+
+            tooltip.style.left = '0px';
+            tooltip.style.top = '0px';
+            const ttRect = tooltip.getBoundingClientRect();
+
+            let top = rect.top + scrollY - ttRect.height - 12;
+            let left = rect.left + scrollX - (ttRect.width / 2) + (rect.width / 2);
+            let placeBelow = false;
+
+            if (top < scrollY + 8) {
+                top = rect.bottom + scrollY + 12;
+                placeBelow = true;
+            }
+
+            const minLeft = scrollX + 8;
+            const maxLeft = scrollX + window.innerWidth - ttRect.width - 8;
+            left = Math.min(Math.max(left, minLeft), maxLeft);
+
+            tooltip.style.top = `${top}px`;
+            tooltip.style.left = `${left}px`;
+            tooltip.classList.toggle('footnote-tooltip--below', placeBelow);
+        }
+
+        function showTooltip(ref) {
+            const text = ref.getAttribute('data-footnote');
+            if (!text) return;
+
+            tooltip.textContent = text;
+            tooltip.setAttribute('aria-hidden', 'false');
+            tooltip.classList.add('visible');
+            activeRef = ref;
+            positionTooltip(ref);
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('visible');
+            tooltip.setAttribute('aria-hidden', 'true');
+            activeRef = null;
+        }
+
+        refs.forEach((ref) => {
+            ref.addEventListener('mouseenter', () => showTooltip(ref));
+            ref.addEventListener('focus', () => showTooltip(ref));
+            ref.addEventListener('mouseleave', hideTooltip);
+            ref.addEventListener('blur', hideTooltip);
+        });
+
+        window.addEventListener('scroll', () => {
+            if (activeRef) {
+                positionTooltip(activeRef);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (activeRef) {
+                positionTooltip(activeRef);
+            }
+        });
+    }
+
     // ========================================
     // SLIDESHOW MODE
     // ========================================
@@ -4956,6 +5149,7 @@ body.toc-hidden .main-content {
         const tocData = generateTOC();
         renderTOC(tocData);
         attachCopyButtons();
+        initFootnotes();
         initSlideshow();
         initFabHint();
 
